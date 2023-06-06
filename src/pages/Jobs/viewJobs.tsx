@@ -105,6 +105,7 @@ type Props =  {
 export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
     const theme = useTheme();
     const [dwelling, setDwelling] = useState('');
+    const [quillSimple, setQuillSimple] = useState(``);
     const [createdDate, setCreatedDate] = useState<Date | null>(new Date());
     const handleChange = (event: SelectChangeEvent) => {
         setDwelling(event.target.value);
@@ -156,6 +157,12 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
   const handleRemoveAllFiles = () => {
     setFiles([]);
   };
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
+
+  const handleTextboxClick = () => {
+    setIsEditorOpen(true);
+  };
+
  return (
     <Container  >
          <Dialog
@@ -307,7 +314,18 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                 </Grid>
                                 <Grid spacing={3}>
                                     <FormLabel id="Notes">Notes</FormLabel>
-                                    <TextareaAutosize style={{width:'100%',height:'100px',color:'white',backgroundColor:'#212b36',borderColor:'#45505c'}} value={_mock.text.description(1)} color="primary" />
+                                         {isEditorOpen ? (
+                                                <Editor
+                                                    id="full-editor"
+                                                    value={quillSimple}
+                                                    onChange={(valu:any) =>{ 
+                                                        console.log(valu)
+                                                        setQuillSimple(valu)
+                                                    }}
+                                                    />
+                                            ) : (
+                                            <TextField sx={{borderRadious:0,width:'100%'}} type="text" onClick={handleTextboxClick} />
+                                            )}
                                 </Grid>
                                 <Grid spacing={3}>
                                     <Button variant='soft' onClick={handleClose} sx={{margin:3}}>

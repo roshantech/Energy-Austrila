@@ -34,7 +34,6 @@ function ActionsMenu({onView}: ActionsMenuProps) {
   };
 
   const handleDelete = () => {
-    // Perform deletion logic for the selected row
     onView(true)
     handleClose();
   };

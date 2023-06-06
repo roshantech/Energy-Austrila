@@ -1,12 +1,14 @@
-import { Avatar, Box, Button, Card, CardContent, CardMedia, CircularProgress, Container, Divider, Grid, InputAdornment, LinearProgress, MenuItem, Select, Stack,Tab,Tabs,TextField, Typography, makeStyles, useTheme } from "@mui/material";
+import { Avatar, Box, Button, ButtonGroup, Card, CardContent, CardHeader, CardMedia, CircularProgress, Container, Divider, Grid, InputAdornment, LinearProgress, MenuItem, Select, Stack,Tab,Tabs,TextField, Typography, makeStyles, styled, useTheme } from "@mui/material";
 import Scrollbar from "src/components/scrollbar";
 import Label from "src/components/label";
 import TextMaxLine from "src/components/text-max-line";
 import _mock from "src/_mock";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Iconify from "src/components/iconify";
-import { CSSProperties, Fragment, useState } from "react";
+import Editor from "src/components/editor/Editor";
+import { CSSProperties, Fragment, useRef, useState } from "react";
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import AppWidgetSummary from "./AppWidgetSummary";
 import Chart, { useChart } from '../../components/chart';
 
 export default function DashBoard() {
@@ -63,7 +65,7 @@ export default function DashBoard() {
       const [value, setValue] = useState<Date | null>(new Date());
       const theme = useTheme();
       const isDarkMode = theme.palette.mode === 'dark';
-    
+      const cardRef = useRef({});
       const codeSnippetStyle: CSSProperties = {
         fontFamily: 'Courier New, monospace',
         backgroundColor: isDarkMode ? theme.palette.grey[800] : theme.palette.grey[200],
@@ -102,21 +104,21 @@ export default function DashBoard() {
       };
     
       const getGradientColorBySatisfactionRate = (rate: number) => {
-        const startColor = { r: 100, g: 0, b: 0 }; // Red color for low satisfaction
-        const endColor = { r: 0, g: 100, b: 0 }; // Green color for high satisfaction
+        const startColor = { r: 100, g: 0, b: 0 }; 
+        const endColor = { r: 0, g: 100, b: 0 }; 
     
         const ratio = rate / 100;
         const color = interpolateColor(startColor, endColor, ratio);
         return color;
       };
     
-     
     return (
       
-        <Container  sx={{maxWidth:'1710px !important',marginTop:2}}>
-        <Grid container spacing={0}>
-            <Grid item xs={12} sm={12} md={3} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-              <Stack spacing={2} sx={{margin:1,width:"fit-content" ,display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <Box  sx={{width:'100% ',marginTop:2,marginRight:2}}>
+           
+            <Grid container spacing={1} sx={{marginLeft:'auto',marginRight:'auto',width:'90%'}}>
+            <Grid item xs={12} sm={12} md={2} >
+              <Stack spacing={2} sx={{width:"fit-content" ,display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 <Avatar alt="Remy Sharp" src={_mock.image.random(7)}  sx={{boxShadow: "z23", width: 150, height: 150,borderRadius:1 }} variant="square" />
                 <TextMaxLine line={1}>
                   <Label sx={{marginTop:0.1 ,width:'230px',fontSize:14}} >Roshan Bhagat</Label>
@@ -135,159 +137,38 @@ export default function DashBoard() {
                 <Button variant="outlined" sx={{width:'230px',fontSize:14}}> View Profile</Button>
               </Stack>
             </Grid>
-            <Grid item xs={12} sm={12} md={6}>
-              <Stack spacing={0} sx={{margin:1}}>
-                <span >Live Running Jobs Logs</span>
-                <code style={codeSnippetStyle}>
-                <Scrollbar>
-                {logsBrodcast.map((log, index) => (
-                  <Fragment key={index}>
-                    {log}
-                    <br />
-                  </Fragment>
-                ))}
-                </Scrollbar>
-                </code>
-                <span style={{marginTop:'10px'}}>Todays News: {new Date().toLocaleDateString()}</span>
-                <code style={codeSnippetStyle} >
-                <Scrollbar>
-                  {logs.map((log, index) => (
-                    <Fragment key={index}>
-                      {log}
-                      <br />
-                    </Fragment>
-                  ))}
-                </Scrollbar>
-                </code>
-              </Stack>
+            <Grid item xs={12} sm={12} md={10}>
+              <Grid container flexDirection='row' justifyContent='end' sx={{marginRight:3,marginTop:5,marginLeft:'-38px'}}>
+                <ButtonGroup size="medium"  variant="text" color="success">
+                  <Button>Today</Button>
+                  <Button>Yesterday</Button>
+                  <Button>Week</Button>
+                  <Button>Month</Button>
+                  <Button>All</Button>
+                </ButtonGroup>
+              </Grid>
+              <Grid container direction='row' spacing={1} sx={{margin:1,marginTop:1}}>
+                <Grid item xs={12} sm={6} md={2.9} >
+                  <AppWidgetSummary title="In Progress" total={714000} icon='carbon:in-progress' color='primary' sx={{}} />
+                </Grid>
+                <Grid item xs={12} sm={6} md={2.9} >
+                  <AppWidgetSummary title="Assigned" total={714000} icon='ic:baseline-assessment' color='secondary' sx={{}} />
+                </Grid>
+                <Grid item xs={12} sm={6} md={2.9} >
+                  <AppWidgetSummary title="Completed" total={714000} icon='carbon:task-complete' color='warning' sx={{}} />
+                </Grid>
+                <Grid item xs={12} sm={6} md={2.9} >
+                  <AppWidgetSummary title="On Hold" total={714000} icon='pajamas:status-paused' color='error' sx={{}} />
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={12} md={3}>
-              <Box sx={{margineTop:'90px'}}>
-                <Chart type="pie" series={series} options={chartOptions} width={550}  />
-              </Box>
-                  
-            </Grid>
+            
         </Grid>
         <Divider variant="middle" sx={{marginTop:'10px'}}/>
         
-        <Grid container spacing={3} >
-            <Grid  container direction="column" item xs={12} sm={12} md={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-              <Stack direction="row" spacing={1} sx={{width:'240px'}}>
-                  <Card style={{display: 'flex',
-                    borderRadius:0,
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    width:'100%',
-                    }}>
-                    <CardContent>
-                      <Typography variant="body1" style={label}>
-                        In Progress
-                      </Typography>
-                      <Typography variant="h1" style={count}>
-                        {10}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                  <Card style={{display: 'flex',
-                    borderRadius:0,
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    width:'100%',
-                    }}>
-                    <CardContent>
-                      <Typography variant="body1" style={label}>
-                      Completed 
-                      </Typography>
-                      <Typography variant="h1" style={count}>
-                        10K
-                      </Typography>
-                    </CardContent>
-                  </Card>
-              </Stack>
-              <Stack direction="row" spacing={1}  sx={{width:'240px',margin:1}}>
-                  <Card style={{display: 'flex',
-                    borderRadius:0,
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    width:'100%',
-                    }}>
-                    <CardContent>
-                      <Typography variant="body1" style={label}>
-                      New
-                      </Typography>
-                      <Typography variant="h1" style={count}>
-                        {10}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                  <Card style={{display: 'flex',
-                    borderRadius:0,
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    width:'100%',
-                    }}>
-                    <CardContent>
-                      <Typography variant="body1" style={label}>
-                      Assigned 
-                      </Typography>
-                      <Typography variant="h1" style={count}>
-                        {10}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-              </Stack>
-
-              <Card style={{
-              fontSize: '48px',
-              fontWeight: 'bold',
-              width:'fit-content',
-              textAlign: 'center',
-              borderRadius:1,
-              maxWidth:'240px',
-              color: theme.palette.primary.main,
-              }}>
-                <CardContent>
-                
-                  <CircularProgress
-                    variant="determinate"
-                    value={80}
-                    size={160}
-                    thickness={4}
-                    color="primary"
-                    style={{
-                      strokeLinecap: 'round',
-                    }}
-                  />
-                  <Box
-                      sx={{
-                        top:'70px',
-                        left:'70px',
-                        position: 'absolute',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Typography
-                        variant="caption"
-                        component="div"
-                        color="text.secondary"
-                        style={{fontSize:'48px'}}
-                      >{`${Math.round(80)}%`}</Typography>
-                    </Box>
-                    <Label sx={{marginTop:0.1 ,width:'200px'}}>Target Range: 75% - 85%</Label>
-                  <Typography variant="body1" style={{
-                    fontSize: '16px',
-                    marginTop: '8px',
-                  }}>
-                    Occupency Rate
-                  </Typography>
-                </CardContent>
-              </Card>
-            <Divider orientation="vertical" flexItem />
-            </Grid>
-            <Grid container direction="row" item xs={12} sm={12} md={9} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-              <Stack direction="column" spacing={1} sx={{margin:1,width:'100%'}}>
+        <Grid container spacing={1} sx={{marginLeft:'auto',marginRight:'auto',width:'90%',marginTop:'10px',marginBottom:'10px'}}>
+          <Grid container direction="row" item xs={12} sm={12} md={9} >
+              <Stack direction="column" spacing={1} sx={{width:'100%'}}>
                 <TextField variant='outlined' size="small" sx={{maxWidth:'400px'}} placeholder="Search Assessor"  type="search"  InputProps={{
                   startAdornment: <InputAdornment position="start"><Iconify icon="bi:search" width={24}  /></InputAdornment>,
                 }}/>
@@ -355,13 +236,69 @@ export default function DashBoard() {
                 </Grid>
               </Stack>
             </Grid>
-
+            <Grid  container direction="column" item xs={12} sm={12} md={3} >
+              <Grid item xs={12} sm={12} md={3}  sx={{marginTop:5.9}}>
+                <Card sx={{maxWidth:440 ,width:'auto',borderRadius:0}} >
+                  <CardHeader title="Progress Chart" />
+                  <StyledChartWrapper dir="ltr">
+                    <Chart type="pie" series={series} options={chartOptions}   height={492} />
+                  </StyledChartWrapper>
+                </Card>
+              </Grid>
+              {/* <Card style={{
+              fontSize: '48px',
+              fontWeight: 'bold',
+              width:'fit-content',
+              textAlign: 'center',
+              borderRadius:1,
+              maxWidth:'240px',
+              color: theme.palette.primary.main,
+              }}>
+                <CardContent>
+                
+                  <CircularProgress
+                    variant="determinate"
+                    value={80}
+                    size={160}
+                    thickness={4}
+                    color="primary"
+                    style={{
+                      strokeLinecap: 'round',
+                    }}
+                  />
+                  <Box
+                      sx={{
+                        top:'70px',
+                        left:'70px',
+                        position: 'absolute',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Typography
+                        variant="caption"
+                        component="div"
+                        color="text.secondary"
+                        style={{fontSize:'48px'}}
+                      >{`${Math.round(80)}%`}</Typography>
+                    </Box>
+                    <Label sx={{marginTop:0.1 ,width:'200px'}}>Target Range: 75% - 85%</Label>
+                  <Typography variant="body1" style={{
+                    fontSize: '16px',
+                    marginTop: '8px',
+                  }}>
+                    Occupency Rate
+                  </Typography>
+                </CardContent>
+              </Card> */}
+            </Grid>
         </Grid>
        
-        </Container>
+        </Box>
     )
 }
-const series = [40,4, 50,5, 10,3, 40,3];
+const series = [10,15, 10,60, 25,35, 15,100,105];
 
 const TABS = [
   {
@@ -478,3 +415,30 @@ const assessors = [
     satisfactionRate: 72,
   },
 ];
+const CHART_HEIGHT = 499;
+const LEGEND_HEIGHT = 110;
+
+const StyledChartWrapper = styled('div')(({ theme }:any) => ({
+  height: CHART_HEIGHT,
+
+  // marginTop: theme.spacing(5),
+  '& .apexcharts-canvas svg': { height: CHART_HEIGHT },
+  '& .apexcharts-canvas svg,.apexcharts-canvas foreignObject': {
+    overflow: 'visible',
+  },
+  '& .apexcharts-graphical' :{
+    transform:'translate(0, 0) !important',
+  },
+
+  '& .apexcharts-legend': {
+    height: LEGEND_HEIGHT,
+    width:'auto',
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'center !important',
+    alignContent: 'center',
+    position: 'relative !important',
+    borderTop: `solid 1px ${theme.palette.divider}`,
+    top: `calc(${CHART_HEIGHT - LEGEND_HEIGHT}px) !important`,
+  },
+}));

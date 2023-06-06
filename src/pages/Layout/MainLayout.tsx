@@ -71,7 +71,7 @@ const NAV_ITEMS = [
     items: [
       {
         title: 'Dashboard',
-        path: '/',
+        path: '/dashboard',
         icon: <Iconify icon="carbon:dashboard" />,
       },
       {
@@ -90,7 +90,7 @@ const NAV_ITEMS = [
       },
       {
         title: 'Report',
-        path: '#',
+        path: '/three',
         icon: <Iconify icon="carbon:report" />,
       },
       

@@ -1,6 +1,7 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 import DashBoard from 'src/pages/Dashboard/DashBoard';
 import AccessorList from 'src/pages/Assessor/AssessorList';
+import DashboardLayout from 'src/layouts/dashboard';
 import Jobs from 'src/pages/Jobs/Jobs';
 import MainLayout from 'src/pages/Layout/MainLayout';
 import GuestGuard from '../auth/GuestGuard';
@@ -25,10 +26,10 @@ export default function Router() {
           <MainLayout />
       ),
       children: [
-        { element: <DashBoard/>, index: true },
+        { path: 'dashboard',element: <DashBoard/>, index: true },
         { path: 'jobs', element: <Jobs /> },
         { path: 'accessorlist', element: <AccessorList /> },
-        { path: 'three', element: <PageThree /> },
+        { path: 'three', element: <DashboardLayout /> },
        
       ],
     },
