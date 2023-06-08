@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, Container, Dialog, DialogTitle, FormControlLabel, FormLabel, Grid, InputLabel, LinearProgress, Link, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, Stack, Switch, TextField, alpha, useTheme } from "@mui/material";
+import { Button, Card, CardContent, CardHeader, Container, Dialog, DialogTitle,Avatar, FormControlLabel, FormLabel, Grid, InputLabel, LinearProgress, Link, ListItem, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent,  Switch, TextField, alpha, useTheme, Stack, Typography } from "@mui/material";
 import { Box, styled, width } from "@mui/system";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -8,15 +8,25 @@ import Iconify from "src/components/iconify";
 import Label from "src/components/label/Label";
 import Editor from "src/components/editor";
 import _mock from "src/_mock/_mock";
+import * as Yup from 'yup';
+// form
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import Upload from "src/components/upload/Upload";
-import { TreeItem, TreeItemProps, TreeView } from "@mui/lab";
+import { TreeItem, TreeItemProps, TreeView,LoadingButton } from "@mui/lab";
+import FormProvider,{RHFTextField} from "src/components/hook-form";
+import { fDate } from "src/utils/formatTime";
 
 interface ViewException {
     handleClose: () => void;
     data : Props,
 }
 
-
+type FormValuesProps = {
+    comment: string;
+    name: string;
+    email: string;
+  };
   function ExceptionView({handleClose,data}:ViewException) {
     return (
         <Container >
@@ -161,6 +171,38 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
 
   const handleTextboxClick = () => {
     setIsEditorOpen(true);
+  };
+  const CommentSchema = Yup.object().shape({
+    comment: Yup.string().required('Comment is required'),
+    name: Yup.string().required('Name is required'),
+    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+  });
+
+  const defaultValues = {
+    comment: '',
+    name: '',
+    email: '',
+  };
+
+  const methods = useForm<FormValuesProps>({
+    resolver: yupResolver(CommentSchema),
+    defaultValues,
+  });
+
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = async (dat: FormValuesProps) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      reset();
+      console.log('DATA', dat);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
  return (
@@ -313,8 +355,8 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                 </Card> */}
                                 </Grid>
                                 <Grid spacing={3}>
-                                    <FormLabel id="Notes">Notes</FormLabel>
-                                         {isEditorOpen ? (
+                                    <FormLabel id="Notes">Comments</FormLabel>
+                                         {/* {isEditorOpen ? (
                                                 <Editor
                                                     id="full-editor"
                                                     value={quillSimple}
@@ -325,7 +367,47 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                                     />
                                             ) : (
                                             <TextField sx={{borderRadious:0,width:'100%'}} type="text" onClick={handleTextboxClick} />
-                                            )}
+                                            )} */}
+                                             <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+                                                <Stack spacing={3} alignItems="flex-end">
+                                                    <RHFTextField
+                                                    name="comment"
+                                                    placeholder="Write some of your comments..."
+                                                    multiline
+                                                    rows={3}
+                                                    />
+
+                                                    <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                                                    Post comment
+                                                    </LoadingButton>
+                                                </Stack>
+                                            </FormProvider>
+                                            <Box>
+                                            <ListItem
+                                                disableGutters
+                                                sx={{
+                                                alignItems: 'flex-start',
+                                                py: 3,
+                                               
+                                                }}
+                                            >
+                                                <Avatar  src={_mock.image.avatar(10)} sx={{ mr: 2, width: 48, height: 48 }} />
+
+                                                <Stack>
+                                                <Typography variant="subtitle1"> {_mock.name.fullName(1)} </Typography>
+
+                                                <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+                                                    {fDate(_mock.time(1))}
+                                                </Typography>
+
+                                                <Typography variant="body2" sx={{ mt: 1 }}>
+                                                    {_mock.text.description(1)}
+                                                </Typography>
+                                                </Stack>
+
+                                                
+                                            </ListItem>
+                                            </Box>
                                 </Grid>
                                 <Grid spacing={3}>
                                     <Button variant='soft' onClick={handleClose} sx={{margin:3}}>
@@ -339,7 +421,7 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                         Exception
                                     </Button>
                                     <Button variant='soft' color='secondary' onClick={handleClose} sx={{margin:3}}>
-                                        Add Notes
+                                        Back
                                     </Button>
                                 </Grid>
     </Container>

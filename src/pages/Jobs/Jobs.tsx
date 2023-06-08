@@ -3,6 +3,7 @@ import { CSSProperties, useState } from 'react';
 import DateRangePicker, { useDateRangePicker } from 'src/components/date-range-picker';
 import _mock, { randomInArray } from 'src/_mock';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { fNumber } from 'src/utils/formatNumber';
 import Scrollbar from 'src/components/scrollbar';
 import { DesktopDatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { fDate } from 'src/utils/formatTime';
@@ -36,6 +37,8 @@ import {
     Select,
     MenuItem,
     Switch,
+    Breadcrumbs,
+    Link,
   } from '@mui/material';
   import { alpha, styled, useTheme } from '@mui/material/styles';
 import DataGridCustom from './DataGridCustom';
@@ -74,11 +77,37 @@ export default function Jobs() {
     const [rowid, setrowid] = useState('');
 
     const handleView = (value : string) => {
-        setrowid(value)
-        setOpen(true)
+        // setrowid(value)
+        // console.log(rowid)
+        setscreen((
+            <>  <Box sx={{marginTop:4,marginLeft:5}}>
+                  <Breadcrumbs aria-label="breadcrumb" sx={{marginTop:4,marginLeft:5}}>
+                        <Link
+                        underline="hover"
+                        sx={{ display: 'flex', alignItems: 'center' }}
+                        color="inherit"
+                        onClick={handleClose}
+                        >
+                            <Iconify icon="eos-icons:job" />
+                        Jobs
+                        </Link>
+                        <Typography
+                        sx={{ display: 'flex', alignItems: 'center' }}
+                        color="text.primary"
+                        >
+                        <Iconify icon="carbon:batch-job" />
+                        Job no:{value}
+                        </Typography>
+                    </Breadcrumbs>
+                    <ViewJobs handleClose={handleClose} data={_dataGrid.filter((row)=> row.id === value)[0]}/>
+                </Box>
+            </>
+        ))
+        // setOpen(true)
     }
     const handleClose = () => {
-        setOpen(false)
+        // setOpen(false)
+        setscreen(Job)
     }
     const options=[
         { value: 'option 1', label: 'New' },
@@ -113,10 +142,157 @@ export default function Jobs() {
         return statusCounts;
         
     };
-    const [quillSimple, setQuillSimple] = useState('');
+    const Job = (
+        <>
+         <Grid item xs={12} sm={12} md={2.5} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center',marginTop:2}}>
+                        <StyledListContainer sx={{height:'660px',minWidth:'250px',width:'250px',marginLeft:'7px',borderRadius:0}}>
+                        <Scrollbar>
+                        <List >
+                            <ListItemButton selected={filterStatus === 'all'} onClick={() => {handleFilterChange('all')}}>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                    <Iconify icon="material-symbols:all-match-sharp" width={24} />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText primary="All" secondary={`count:${  getStatusCounts('all')}`} />
+                            </ListItemButton>
+                            <ListItemButton  selected={filterStatus === 'New'} onClick={() => {handleFilterChange('New')}}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                <Iconify icon="clarity:new-solid" width={24} />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="New" secondary={`count:${  getStatusCounts('New')}`} />
+                            </ListItemButton>
+                            <ListItemButton selected={filterStatus === 'In Progress'} onClick={() => {handleFilterChange('In Progress')}} >
+                            <ListItemAvatar>
+                                <Avatar>
+                                <Iconify icon="carbon:in-progress" width={24} />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="In Progress" secondary={`count:${  getStatusCounts('In Progress')}`} />
+                            </ListItemButton>
+                            <ListItemButton selected={filterStatus === 'Urgent Jobs'} onClick={() => {handleFilterChange('Urgent Jobs')}}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                <Iconify icon="fluent:alert-urgent-24-filled" width={24} />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Urgent Jobs" secondary={`count:${  getStatusCounts('Urgent Jobs')}`}/>
+                            </ListItemButton>
+                            <ListItemButton selected={filterStatus === 'Assigned'} onClick={() => {handleFilterChange('Assigned')}}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                <Iconify icon="mdi:assignment" width={24} />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Assigned" secondary={`count:${  getStatusCounts('Assigned')}`} />
+                            </ListItemButton>
+                            <ListItemButton selected={filterStatus === 'Assessment Complete'} onClick={() => {handleFilterChange('Assessment Complete')}}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                <Iconify icon="ic:baseline-assessment" width={24} />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Assessment Complete" secondary={`count:${  getStatusCounts('Assessment Complete')}`} />
+                            </ListItemButton>
+                            <ListItemButton selected={filterStatus === 'Job Complete'} onClick={() => {handleFilterChange('Job Complete')}}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                <Iconify icon="carbon:task-complete" width={24} />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Job Complete" secondary={`count:${  getStatusCounts('Job Complete')}`} />
+                            </ListItemButton>
+                            <ListItemButton selected={filterStatus === 'On Hold'} onClick={() => {handleFilterChange('On Hold')}}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                <Iconify icon="pajamas:status-paused" width={24} />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="On Hold" secondary={`count:${  getStatusCounts('On Hold')}`} />
+                            </ListItemButton>
+                            <ListItemButton selected={filterStatus === 'Cancelled'} onClick={() => {handleFilterChange('Cancelled')}}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                <Iconify icon="pajamas:status-cancelled" width={24} />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Cancelled" secondary={`count:${  getStatusCounts('Cancelled')}`} />
+                            </ListItemButton>
+                            <ListItemButton sx={{
+            color: '#D53343',
+            '&.Mui-selected': {
+              backgroundColor: '#D53343',
+              color: 'white',
+            },
+          }}   selected={filterStatus === 'Exception'} onClick={() => {handleFilterChange('Exception')}}>
+                            <ListItemAvatar>
+                                <Avatar>
+                                <Iconify icon="ant-design:exception-outlined" width={24} />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Exception" secondary={`count:${  getStatusCounts('Exception')}`} />
+                            </ListItemButton>
+                        </List>
+                        </Scrollbar>
+                        </StyledListContainer>
+                    </Grid>
+                    <Grid direction='column' item xs={12} sm={12} md={9.5} sx={{display: 'flex',marginTop:2, justifyContent: 'center',height:'680px',width:'100%', alignItems: 'start'}}>
+                        <Grid   item xs={2} sm={2} md={1} spacing={3} sx={{marginTop:'auto'}}>
+                        <Grid container direction="row"  >
+                            <TextField  variant='outlined' size="small" sx={{width:'20%' ,marginTop:1 ,height:'50px'}} placeholder="Search Job"  type="search"  InputProps={{
+                                startAdornment: <InputAdornment position="start"><Iconify icon="bi:search" width={24}  /></InputAdornment>,
+                                }}/>
+                                <Button variant='soft' size='medium' sx={{marginLeft:1,marginTop:1,height:'40px'}}>search</Button>
+                                <Button variant='soft'size='medium' color='secondary' sx={{marginLeft:1,marginTop:1,height:'40px'}}>Reset </Button>
+                                <FormControlLabel control={<Switch defaultChecked sx={{marginLeft:1}}/>} label="Case Sensitive" />
+                            <IconButton   size="large"   onClick={pickerCalendar.onOpen}>
+                                <Iconify icon="bi:calendar-range-fill" width={30}/>
+                            </IconButton>
+                            <LocalizationProvider  dateAdapter={AdapterDayjs}>
+                            <DesktopDatePicker
+                                label="Start"
+                                value={fDate(pickerCalendar.startDate)}
+                                minDate={new Date('2017-01-01')}
+                                onChange={(newValue) => {
+                                    setStart(newValue);
+                                }}
+                                renderInput={(params) => <TextField  {...params} margin="dense" sx={{marginRight:1}} />}
+                            />
+                            <DesktopDatePicker
+                                label="End"
+                                value={fDate(pickerCalendar.endDate)}
+                                minDate={new Date('2017-01-01')}
+                                onChange={(newValue) => {
+                                    setEnd(newValue);
+                                }}
+                                renderInput={(params) => <TextField  {...params} margin="dense" />}
+                            />
+                            <DateRangePicker
+                                variant="calendar"
+                                open={pickerCalendar.open}
+                                startDate={pickerCalendar.startDate}
+                                endDate={pickerCalendar.endDate}
+                                onChangeStartDate={pickerCalendar.onChangeStartDate}
+                                onChangeEndDate={pickerCalendar.onChangeEndDate}
+                                onClose={pickerCalendar.onClose}
+                                isError={pickerCalendar.isError}
+                            />
+                            </LocalizationProvider>
+                            </Grid>
+                        </Grid >
+                        <Grid   container direction="row" sx={{height:'600px'}} >
+                            <DataGridCustom data={filteredData} sendData={handleView}/>
+                        </Grid>
+                    </Grid>
+        </>
+        )
+        const [view, setview] = useState('');
+        const [screen, setscreen] = useState(Job);
     return (
         <Container  sx={{maxWidth:'1710px !important',marginTop:2 }}>
-             <Dialog
+             {/* <Dialog
                     fullWidth
                     maxWidth='lg'
                     open={open}
@@ -124,9 +300,48 @@ export default function Jobs() {
                 >
                        <ViewJobs handleClose={handleClose} data={_dataGrid.filter((row)=> row.id === rowid)[0]}/>
 
-            </Dialog>
+            </Dialog> */}
             <Grid container spacing={3} >
-                <Grid container direction="column" item xs={12} sm={12} md={2.5} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <Grid container direction='row' spacing={1} sx={{margin:1,marginTop:3,marginLeft:7}}>
+                  <Grid item xs={12} sm={6} md={2.9} >
+                  <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="subtitle2">In Progress</Typography>
+                      <Typography variant="h3">{fNumber(714000)}</Typography>
+                    </Box>
+                    <Iconify icon="carbon:in-progress" width={24}/>
+
+                  </Card>                
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={2.9} >
+                  <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="subtitle2">Assigned</Typography>
+                      <Typography variant="h3">{fNumber(114000)}</Typography>
+                    </Box>
+                    <Iconify icon="ic:baseline-assessment" width={24}/>
+
+                  </Card>                  </Grid>
+                  <Grid item xs={12} sm={6} md={2.9} >
+                  <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
+                    <Box sx={{ flexGrow: 1 }}>
+                      <Typography variant="subtitle2">Completed</Typography>
+                      <Typography variant="h3">{fNumber(4000)}</Typography>
+                    </Box>
+                    <Iconify icon="carbon:task-complete" width={24}/>
+
+                  </Card>                  </Grid>
+                  <Grid item xs={12} sm={6} md={2.9} >
+                    <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
+                      <Box sx={{ flexGrow: 1 }}>
+                        <Typography variant="subtitle2">On Hold</Typography>
+                        <Typography variant="h3">{fNumber(200)}</Typography>
+                      </Box>
+                        <Iconify icon="pajamas:status-paused" width={24}/>
+                    </Card>                  
+                  </Grid>
+                </Grid>
+                {/* <Grid container direction="column" item xs={12} sm={12} md={2.5} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Stack direction="row" spacing={1} sx={{width:'250px'}}>
                         <Card style={{display: 'flex',
                             borderRadius:0,
@@ -195,131 +410,9 @@ export default function Jobs() {
                             </CardContent>
                         </Card>
                     </Stack>
-                </Grid>
-                <Grid   item xs={12} sm={12} md={9.5} spacing={3} sx={{marginTop:'auto'}}>
-                    {/* <Grid container direction="row">   
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                            checked={filterStatus === 'all'} onClick={() => {handleFilterChange('all')}}
-                            color="info"
-                            size="medium"
-                            icon={<Iconify icon="material-symbols:all-match-sharp" />}
-                            checkedIcon={<Iconify icon="material-symbols:all-match-sharp" />}
-                            />
-                        } 
-                    label="All"
-                    />              
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                            checked={filterStatus === 'In Progress'} onClick={() => {handleFilterChange('In Progress')}}
-                            color="info"
-                            size="medium"
-                            icon={<Iconify icon="carbon:in-progress" />}
-                            checkedIcon={<Iconify icon="carbon:in-progress" />}
-                            />
-                        }
-                    label="In Progress"
-                    />
-                    <FormControlLabel
-                    control={
-                        <Checkbox
-                        checked={filterStatus === 'Urgent Jobs'} onClick={() => {handleFilterChange('Urgent Jobs')}}
-                        color="info"
-                        size="medium"
-                        icon={<Iconify icon="fluent:alert-urgent-24-filled" />}
-                        checkedIcon={<Iconify icon="fluent:alert-urgent-24-filled" />}
-                        />
-                    }
-                    label="Urgent Jobs"
-                    />
-                    <FormControlLabel
-                    control={
-                        <Checkbox
-                        checked={filterStatus === 'Assessment Complete'} onClick={() => {handleFilterChange('Assessment Complete')}}
-                        color="info"
-                        size="medium"
-                        icon={<Iconify icon="ic:baseline-assessment" />}
-                        checkedIcon={<Iconify icon="ic:baseline-assessment" />}
-                        />
-                    }
-                    label="Assessment Complete"
-                    />
-                    <FormControlLabel
-                    control={
-                        <Checkbox
-                        checked={filterStatus === 'New'} onClick={() => {handleFilterChange('New')}}
-
-                        color="info"
-                        size="medium"
-                        icon={<Iconify icon="clarity:new-solid" />}
-                        checkedIcon={<Iconify icon="clarity:new-solid" />}
-                        />
-                    }
-                    label="New"
-                    />
-                    <FormControlLabel
-                    control={
-                        <Checkbox
-                        checked={filterStatus === 'Job complete'} onClick={() => {handleFilterChange('Job complete')}}
-                        color="info"
-                        size="medium"
-                        icon={<Iconify icon="carbon:task-complete" />}
-                        checkedIcon={<Iconify icon="carbon:task-complete" />}
-                        />
-                    }
-                    label="Job complete"
-                    />
-                    <FormControlLabel
-                    control={
-                        <Checkbox
-                        checked={filterStatus === 'Cancelled'} onClick={() => {handleFilterChange('Cancelled')}}
-                        color="info"
-                        size="medium"
-                        icon={<Iconify icon="pajamas:status-cancelled" />}
-                        checkedIcon={<Iconify icon="pajamas:status-cancelled" />}
-                        />
-                    }
-                    label="Cancelled"
-                    />
-                    <FormControlLabel
-                    control={
-                        <Checkbox
-                        checked={filterStatus === 'On Hold'} onClick={() => {handleFilterChange('On Hold')}}
-                        color="info"
-                        size="medium"
-                        icon={<Iconify icon="pajamas:status-paused" />}
-                        checkedIcon={<Iconify icon="pajamas:status-paused" />}
-                        />
-                    }
-                    label="On Hold"
-                    />
-                    <FormControlLabel
-                    control={
-                        <Checkbox
-                        checked={filterStatus === 'Assigned'} onClick={() => {handleFilterChange('Assigned')}}
-                        color="info"
-                        size="medium"
-                        icon={<Iconify icon="mdi:assignment" />}
-                        checkedIcon={<Iconify icon="mdi:assignment" />}
-                        />
-                    }
-                    label="Assigned"
-                    />
-                    <FormControlLabel
-                    control={
-                        <Checkbox
-                        checked={filterStatus === 'Exception'} onClick={() => {handleFilterChange('Exception')}}
-                        color="error"
-                        size="medium"
-                        icon={<Iconify icon="ant-design:exception-outlined" />}
-                        checkedIcon={<Iconify icon="ant-design:exception-outlined" />}
-                        />
-                    }
-                    label="Exception"
-                    />
                 </Grid> */}
+                {/* <Grid   item xs={12} sm={12} md={9.5} spacing={3} sx={{marginTop:'auto'}}>
+
                         <Grid container direction="row"  >
 
                         <TextField  variant='outlined' size="small" sx={{width:'40%' ,marginTop:1 ,height:'50px'}} placeholder="Search Job"  type="search"  InputProps={{
@@ -387,13 +480,13 @@ export default function Jobs() {
                                             </Select>
                             </Box>
                         </Grid>
-                    </Grid>
+                    </Grid> */}
                     {/* <Grid container direction="row" spacing={2} sx={{  mt: 3}}>
                     </Grid> */}
 
             </Grid>
             <Grid container  spacing={4} sx={{ marginBottom:'10px'}}>
-                <Grid item xs={12} sm={12} md={2.5} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                {/* <Grid item xs={12} sm={12} md={2.5} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <StyledListContainer sx={{height:'550px',minWidth:'250px',width:'250px',marginLeft:'7px',borderRadius:0}}>
                     <Scrollbar>
                     <List >
@@ -489,7 +582,8 @@ export default function Jobs() {
                 </Grid>
                 <Grid item xs={12} sm={12} md={9.5} sx={{display: 'flex', justifyContent: 'center',height:'600px', alignItems: 'center'}}>
                      <DataGridCustom data={filteredData} sendData={handleView}/>
-                </Grid>
+                </Grid> */}
+                {screen}
             </Grid>
         </Container>
     )

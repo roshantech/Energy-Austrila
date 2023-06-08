@@ -25,7 +25,10 @@ export default function MainLayout() {
             sx={{
               boxShadow: 0,
               width:"100",
-              top: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
+              position:'fixed',
+              zIndex:1
+              // top: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
+              
             }}
           >
               <Toolbar>
@@ -41,7 +44,7 @@ export default function MainLayout() {
         component="main"
         sx={{
           flexGrow: 1,
-         
+          marginTop:8
         }}
       >
         <Outlet />

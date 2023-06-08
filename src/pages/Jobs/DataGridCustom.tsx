@@ -9,6 +9,11 @@ import {
   GridRowSelectionModel,
   getGridNumericOperators,
   GridFilterInputValueProps,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarDensitySelector,
+  GridToolbarExport,
+  GridToolbarFilterButton,
 } from '@mui/x-data-grid';
 // utils
 import Iconify from 'src/components/iconify';
@@ -176,32 +181,32 @@ export default function DataGridCustom({ data ,sendData}:ChildProps) {
       renderCell: (params) => RenderStatus(params.row.status),
     },
     
-    {
-      field: 'occupency',
-      type: 'number',
-      headerName: 'Occupency',
-      align: 'center',
-      headerAlign: 'center',
-      width: 160,
-      editable:true,
-      renderCell: (params) => (
-        <Stack spacing={1} direction="row" alignItems="center" sx={{ px: 1, width: 1, height: 1 }}>
-          <LinearProgress
-            value={params.row.occupency}
-            variant="determinate"
-            color={
-              (params.row.occupency < 30 && 'error') ||
-              (params.row.occupency > 30 && params.row.occupency < 70 && 'warning') ||
-              'primary'
-            }
-            sx={{ width: 1, height: 6 }}
-          />
-          <Typography variant="caption" sx={{ width: 80 }}>
-            {fPercent(params.row.occupency)}
-          </Typography>
-        </Stack>
-      ),
-    },
+    // {
+    //   field: 'occupency',
+    //   type: 'number',
+    //   headerName: 'Occupency',
+    //   align: 'center',
+    //   headerAlign: 'center',
+    //   width: 160,
+    //   editable:true,
+    //   renderCell: (params) => (
+    //     <Stack spacing={1} direction="row" alignItems="center" sx={{ px: 1, width: 1, height: 1 }}>
+    //       <LinearProgress
+    //         value={params.row.occupency}
+    //         variant="determinate"
+    //         color={
+    //           (params.row.occupency < 30 && 'error') ||
+    //           (params.row.occupency > 30 && params.row.occupency < 70 && 'warning') ||
+    //           'primary'
+    //         }
+    //         sx={{ width: 1, height: 6 }}
+    //       />
+    //       <Typography variant="caption" sx={{ width: 80 }}>
+    //         {fPercent(params.row.occupency)}
+    //       </Typography>
+    //     </Stack>
+    //   ),
+    // },
     {
       field: 'action',
       headerName: 'Action',
@@ -256,10 +261,22 @@ export default function DataGridCustom({ data ,sendData}:ChildProps) {
       onRowSelectionModelChange={(newSelectionModel: any) => {
         setSelectionModel(newSelectionModel);
       }}
-      components={{
-        Toolbar: GridToolbar,
+      slots={{
+        toolbar: CustomToolbar,
       }}
     />
+  );
+}
+
+// ----------------------------------------------------------------------
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      {/* <GridToolbarDensitySelector /> */}
+      <GridToolbarExport />
+    </GridToolbarContainer>
   );
 }
 
