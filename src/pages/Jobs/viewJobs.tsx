@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, Container, Dialog, DialogTitle,Avatar, FormControlLabel, FormLabel, Grid, InputLabel, LinearProgress, Link, ListItem, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent,  Switch, TextField, alpha, useTheme, Stack, Typography } from "@mui/material";
+import { Button, Card, CardContent, CardHeader, Accordion ,AccordionDetails ,AccordionSummary ,Container, Dialog, DialogTitle,Avatar, FormControlLabel, FormLabel, Grid, InputLabel, LinearProgress, Link, ListItem, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent,  Switch, TextField, alpha, useTheme, Stack, Typography } from "@mui/material";
 import { Box, styled, width } from "@mui/system";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -205,6 +205,12 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
     }
   };
 
+  const [expanded, setExpanded] = useState<string | false>(false);
+
+  const handleAccordianChange =
+    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
  return (
     <Container  >
          <Dialog
@@ -263,7 +269,7 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                         <FormLabel >Job Status: {data.status}</FormLabel>
                                         <LinearProgress variant="determinate" sx={{width:'100%',marginTop:3}} value={data.occupency} />
                                         </Box>
-                                         <Upload
+                                         {/* <Upload
                                             sx={{width:'100%',marginTop:3}}
                                             multiple
                                             thumbnail={preview}
@@ -272,7 +278,7 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                             onRemove={handleRemoveFile}
                                             onRemoveAll={handleRemoveAllFiles}
                                             onUpload={() => console.log('ON UPLOAD')}
-                                        />
+                                        /> */}
                                     
                                 </Grid>
                                 <Grid item lg={6}>
@@ -318,7 +324,7 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                             onChange={setCreatedDate}
                                             /> 
                                         </LocalizationProvider>
-                                        <StyledTreeView
+                                        {/* <StyledTreeView
                                         sx={{width:'100%',marginTop:3}}
                                         defaultCollapseIcon={<Iconify icon="eva:chevron-down-fill" />}
                                         defaultExpandIcon={<Iconify icon="eva:chevron-right-fill" />}
@@ -330,44 +336,52 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                             <TreeItem nodeId="4" label="somefile.txt" />
                                         </TreeItem>
                                         
-                                        </StyledTreeView>
+                                        </StyledTreeView> */}
+                                        
                                 </Grid>
                                 </Grid>
                                 <Grid container direction='row' lg={6} sx={{margin:3}}>
-                                {/* <Card>
-                                    <CardHeader
-                                    title="Upload Multi File"
-                                    action={
-                                        <FormControlLabel
-                                        control={
-                                            <Switch
-                                            checked={preview}
-                                            onChange={(event) => setPreview(event.target.checked)}
-                                            />
-                                        }
-                                        label="Show Thumbnail"
-                                        />
-                                    }
-                                    />
-                                    <CardContent> */}
-                                   
-                                    {/* </CardContent>
-                                </Card> */}
+                                {/* <Accordion expanded={expanded === 'panel1'} onChange={handleAccordianChange('panel1')}>
+                                            <AccordionSummary
+                                            expandIcon={<Iconify icon="" />}
+                                            aria-controls="panel1bh-content"
+                                            id="panel1bh-header"
+                                            >
+                                            <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                                                Public Documents
+                                            </Typography>
+                                            {expanded !== 'panel1' &&<Typography sx={{ color: 'text.secondary' }}>I am an accordion</Typography>}
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                            <Typography>
+                                                Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
+                                                Aliquam eget maximus est, id dignissim quam.
+                                            </Typography>
+                                            </AccordionDetails>
+                                        </Accordion>
+                                        <Accordion expanded={expanded === 'panel2'} onChange={handleAccordianChange('panel2')}>
+                                            <AccordionSummary
+                                            expandIcon={<Iconify icon="" />}
+                                            aria-controls="panel2bh-content"
+                                            id="panel2bh-header"
+                                            >
+                                            <Typography sx={{ width: '33%', flexShrink: 0 }}>Confidential Documents</Typography>
+                                            <Typography sx={{ color: 'text.secondary' }}>
+                                                You are currently not an owner
+                                            </Typography>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                            <Typography>
+                                                Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus,
+                                                varius pulvinar diam eros in elit. Pellentesque convallis laoreet
+                                                laoreet.
+                                            </Typography>
+                                            </AccordionDetails>
+                                        </Accordion> */}
                                 </Grid>
-                                <Grid spacing={3}>
+                                <Grid container spacing={3}>
                                     <FormLabel id="Notes">Comments</FormLabel>
-                                         {/* {isEditorOpen ? (
-                                                <Editor
-                                                    id="full-editor"
-                                                    value={quillSimple}
-                                                    onChange={(valu:any) =>{ 
-                                                        console.log(valu)
-                                                        setQuillSimple(valu)
-                                                    }}
-                                                    />
-                                            ) : (
-                                            <TextField sx={{borderRadious:0,width:'100%'}} type="text" onClick={handleTextboxClick} />
-                                            )} */}
+                        
                                              <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                                                 <Stack spacing={3} alignItems="flex-end">
                                                     <RHFTextField
@@ -409,7 +423,7 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                             </ListItem>
                                             </Box>
                                 </Grid>
-                                <Grid spacing={3}>
+                                <Grid container spacing={3}>
                                     <Button variant='soft' onClick={handleClose} sx={{margin:3}}>
                                         Save
                                     </Button>

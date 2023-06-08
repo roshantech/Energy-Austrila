@@ -1,5 +1,5 @@
 import Iconify from 'src/components/iconify';
-import { CSSProperties, useState } from 'react';
+import { CSSProperties, ReactNode, useState } from 'react';
 import DateRangePicker, { useDateRangePicker } from 'src/components/date-range-picker';
 import _mock, { randomInArray } from 'src/_mock';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -39,6 +39,7 @@ import {
     Switch,
     Breadcrumbs,
     Link,
+    ButtonProps,
   } from '@mui/material';
   import { alpha, styled, useTheme } from '@mui/material/styles';
 import DataGridCustom from './DataGridCustom';
@@ -52,7 +53,6 @@ export default function Jobs() {
     const isDarkMode = them.palette.mode === 'dark';
   
 
-    const pickerCalendar = useDateRangePicker(new Date(), new Date());
     const StyledListContainer = styled(Paper)(({ theme }) => ({
         width: '100%',
         border: `solid 1px ${theme.palette.divider}`,
@@ -142,6 +142,29 @@ export default function Jobs() {
         return statusCounts;
         
     };
+    const {
+        startDate,
+        endDate,
+        onChangeStartDate,
+        onChangeEndDate,
+        open: openPicker,
+        onOpen: onOpenPicker,
+        onClose: onClosePicker,
+        onReset: onResetPicker,
+        isSelected: isSelectedValuePicker,
+        isError,
+        shortLabel,
+      } = useDateRangePicker(null, null);
+
+      const handleChangeStartDate = (newValue: Date | null) => {
+        onChangeStartDate(newValue);
+      };
+    
+      const handleChangeEndDate = (newValue: Date | null) => {
+        onChangeEndDate(newValue);
+      };
+    
+
     const Job = (
         <>
          <Grid item xs={12} sm={12} md={2.5} sx={{display: 'flex', justifyContent: 'center', alignItems: 'center',marginTop:2}}>
@@ -247,10 +270,17 @@ export default function Jobs() {
                                 <Button variant='soft' size='medium' sx={{marginLeft:1,marginTop:1,height:'40px'}}>search</Button>
                                 <Button variant='soft'size='medium' color='secondary' sx={{marginLeft:1,marginTop:1,height:'40px'}}>Reset </Button>
                                 <FormControlLabel control={<Switch defaultChecked sx={{marginLeft:1}}/>} label="Case Sensitive" />
-                            <IconButton   size="large"   onClick={pickerCalendar.onOpen}>
+                                <FileFilterButton
+                                    isSelected={!!isSelectedValuePicker}
+                                    startIcon={<Iconify icon="eva:calendar-fill" />}
+                                    onClick={onOpenPicker}
+                                    >
+                                    {isSelectedValuePicker ? shortLabel : 'Select Date'}
+                                    </FileFilterButton>
+                                    <LocalizationProvider  dateAdapter={AdapterDayjs}>
+                            {/* <IconButton   size="large"   onClick={pickerCalendar.onOpen}>
                                 <Iconify icon="bi:calendar-range-fill" width={30}/>
                             </IconButton>
-                            <LocalizationProvider  dateAdapter={AdapterDayjs}>
                             <DesktopDatePicker
                                 label="Start"
                                 value={fDate(pickerCalendar.startDate)}
@@ -268,16 +298,17 @@ export default function Jobs() {
                                     setEnd(newValue);
                                 }}
                                 renderInput={(params) => <TextField  {...params} margin="dense" />}
-                            />
+                            /> */}
                             <DateRangePicker
                                 variant="calendar"
-                                open={pickerCalendar.open}
-                                startDate={pickerCalendar.startDate}
-                                endDate={pickerCalendar.endDate}
-                                onChangeStartDate={pickerCalendar.onChangeStartDate}
-                                onChangeEndDate={pickerCalendar.onChangeEndDate}
-                                onClose={pickerCalendar.onClose}
-                                isError={pickerCalendar.isError}
+                                startDate={startDate}
+                                endDate={endDate}
+                                onChangeStartDate={handleChangeStartDate}
+                                onChangeEndDate={handleChangeEndDate}
+                                open={openPicker}
+                                onClose={onClosePicker}
+                                isSelected={isSelectedValuePicker}
+                                isError={isError}
                             />
                             </LocalizationProvider>
                             </Grid>
@@ -602,4 +633,33 @@ const _dataGrid = [...Array(40)].map((_, index) => ({
     lastName: _mock.name.firstName(index),
     createdDate: _mock.time(index),
   }));
+
+  interface Props extends ButtonProps {
+    children?: ReactNode;
+    isSelected: boolean;
+  }
+  
+ function FileFilterButton({ children, isSelected, ...other }: Props) {
+    return (
+      <Button
+        variant="soft"
+        color="inherit"
+        sx={{
+          textTransform: 'unset',
+          color: 'text.secondary',
+          width: { xs: 1, md: 'auto' },
+          justifyContent: 'flex-start',
+          fontWeight: 'fontWeightMedium',
+          ...(isSelected && {
+            color: 'text.primary',
+          }),
+        }}
+        {...other}
+      >
+        {children}
+  
+        <Box sx={{ flexGrow: 1 }} />
+      </Button>
+    );
+  }
 
