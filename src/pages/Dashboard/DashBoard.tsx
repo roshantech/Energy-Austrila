@@ -106,29 +106,9 @@ export default function DashBoard() {
       }));
       const chart = {categories: ['0-3', '3-6', '6-9', '9-12', '<12'],
       colors: [theme.palette.primary.main, theme.palette.warning.main],
-      seriesBar: [
-        {
-          type: 'Week',
-          data: [
-            { name: 'Expenses', data: [10, 34, 13, 56, 77] },
-          ],
-        },
-        {
-          type: 'Month',
-          data: [
-            { name: 'Expenses', data: [45, 77, 99, 88, 77] },
-          ],
-        },
-        {
-          type: 'Year',
-          data: [
-            { name: 'Expenses', data: [80, 55, 34, 114, 80] },
-          ],
-        },
-      ],}
-      const { categories, colors, seriesBar } = chart;
+      data:[ { name: 'New', data: [31,20,3,10,4] },{ name: 'Assigned', data: [56,31,7,12,6] },{ name: 'In Progress', data: [77,56,13,34,10] },{ name: 'All', data: [100,80,25,60,25] }]}
+      const { categories, colors, data } = chart;
 
-      const [seriesData, setSeriesData] = useState('Year');
     
       const chartOptionBar = useChart({
         colors,
@@ -140,7 +120,7 @@ export default function DashBoard() {
         xaxis: {
           categories,
           title: {
-            text: 'Days', 
+            text: 'Aging Days', 
             style: {
               fontSize: '16px', 
             },
@@ -155,7 +135,7 @@ export default function DashBoard() {
         },
         yaxis:{
           title: {
-            text: 'Jobs', 
+            text: 'No. of Jobs', 
             style: {
               fontSize: '16px', 
             },
@@ -169,7 +149,11 @@ export default function DashBoard() {
         },
         tooltip: {
           y: {
-            formatter: (va: number) => `$${va}`,
+            formatter: (v: number) => `$${v}`,
+          },
+          style:{
+            fontSize: '13px', 
+            
           },
         },
  
@@ -312,11 +296,12 @@ export default function DashBoard() {
             <Card sx={{width:'100%'}}>
               <CardHeader title="Assessor List" subheader="" />
                       
-              <Stack spacing={3} sx={{ p: 3 ,height:'300px'}} >
-                
-                {orderBy(_appAuthors, ['favourite'], ['desc']).map((author, index) => (
-                  <AuthorItem key={author.id} author={author} index={index} />
-                ))}
+              <Stack spacing={3} sx={{ p: 3 ,height:'730px'}} >
+                <Scrollbar>
+                  {orderBy(_appAuthors, ['favourite'], ['desc']).map((author, index) => (
+                    <AuthorItem key={author.id} author={author} index={index} />
+                    ))}
+                </Scrollbar>
               </Stack>
             </Card>
             </Grid>
@@ -397,29 +382,28 @@ export default function DashBoard() {
           <CardHeader
             title="Job Aging Chart"
             subheader=""
-            action={
-              <CustomSmallSelect
-                value={seriesData}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setSeriesData(event.target.value)
-                }
-              >
-                {seriesBar.map((option:any) => (
-                  <option key={option.type} value={option.type}>
-                    {option.type}
-                  </option>
-                ))}
-              </CustomSmallSelect>
-            }
+            // action={
+            //   <CustomSmallSelect
+            //     value={seriesData}
+            //     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            //       setSeriesData(event.target.value)
+            //     }
+            //   >
+            //     {seriesBar.map((option:any) => (
+            //       <option key={option.type} value={option.type}>
+            //         {option.type}
+            //       </option>
+            //     ))}
+            //   </CustomSmallSelect>
+            // }
           />
 
-          {seriesBar.map((item:any) => (
-            <Box key={item.type} sx={{ mt: 3, mx: 3 }} dir="ltr">
-              {item.type === seriesData && (
-                <Chart type="bar" series={item.data} options={chartOptionBar} height={364} />
-              )}
+            <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
+             
+                <Chart type="bar" series={data} options={chartOptionBar} height={364} />
+              
             </Box>
-          ))}
+          
         </Card>
         </Grid>
        

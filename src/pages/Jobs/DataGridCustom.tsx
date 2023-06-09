@@ -25,7 +25,7 @@ import { fPercent } from 'src/utils/formatNumber';
 // ----------------------------------------------------------------------
 
 interface ActionsMenuProps {
-  onView: (item: boolean) => void;
+  onView: (item: boolean,edit: boolean ) => void;
 }
 
 function ActionsMenu({onView}: ActionsMenuProps) {
@@ -38,9 +38,9 @@ function ActionsMenu({onView}: ActionsMenuProps) {
     setAnchorEl(null);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (edit:boolean) => {
     // Perform deletion logic for the selected row
-    onView(true)
+    onView(true,edit)
     handleClose();
   };
 
@@ -55,7 +55,9 @@ function ActionsMenu({onView}: ActionsMenuProps) {
         onClose={handleClose}
       >
         
-        <MenuItem onClick={handleDelete}><Iconify icon="carbon:view-filled" sx={{marginRight:1}}/>  View</MenuItem>
+        <MenuItem onClick={() => {handleDelete(true)}}><Iconify icon="carbon:view-filled" sx={{marginRight:1}}/>  View</MenuItem>
+        <MenuItem onClick={() => {handleDelete(false)}}><Iconify icon="bx:edit" sx={{marginRight:1}}/>  Edit</MenuItem>
+
 
       </Menu>
       
@@ -72,14 +74,14 @@ type Props =  {
     occupency: number;
     rating: number;
     status: string;
-    isAdmin: boolean;
+    jobType: string;
     lastName: string;
     firstName: string;
     createdDate: Date;
   }[];
 interface ChildProps {
   data : Props,
-  sendData: (data: string) => void;
+  sendData: (data: string,edit:boolean) => void;
 }
 
 export default function DataGridCustom({ data ,sendData}:ChildProps) {
@@ -103,6 +105,7 @@ export default function DataGridCustom({ data ,sendData}:ChildProps) {
   
     {
       field: 'id',
+      headerName: 'Job No.',
       width: 76,
 
     },
@@ -118,37 +121,21 @@ export default function DataGridCustom({ data ,sendData}:ChildProps) {
       renderCell: (params) => <CustomAvatar name={params.row.name} sx={{ width: 36, height: 36 }} />,
     },
     {
-      field: 'name',
-      headerName: 'Assessor',
-      flex: 1,
-      editable: true,
-    },
-    {
       field: 'firstName',
       headerName: 'Requestor',
       flex: 1,
       editable: true,
     },
-    {
-      field: 'email',
-      headerName: 'Email',
-      flex: 1,
-      editable: true,
-      renderCell: (params) => (
-        <Typography variant="body2" sx={{ textDecoration: 'underline' }} noWrap>
-          {params.row.email}
-        </Typography>
-      ),
-    },
-    {
-      field: 'lastLogin',
-      type: 'dateTime',
-      headerName: 'Last login',
-      align: 'right',
-      headerAlign: 'right',
-      width: 170,
-      editable:true,
-    },
+   
+    // {
+    //   field: 'lastLogin',
+    //   type: 'dateTime',
+    //   headerName: 'Last login',
+    //   align: 'right',
+    //   headerAlign: 'right',
+    //   width: 170,
+    //   editable:true,
+    // },
     {
       field: 'createdDate',
       type: 'dateTime',
@@ -157,6 +144,21 @@ export default function DataGridCustom({ data ,sendData}:ChildProps) {
       headerAlign: 'right',
       width: 170,
       editable:true,
+
+    },
+    {
+      field: 'jobType',
+      type: 'singleSelect',
+      headerName: 'Job Type',
+      valueOptions: ['New', 'Existing'],
+      align: 'center',
+      headerAlign: 'center',
+      width: 160,
+      editable:true,
+      renderCell: (params) =>(
+      <Typography variant="body2"  noWrap>
+      {params.row.jobType}
+    </Typography>),
 
     },
     // {
@@ -170,6 +172,23 @@ export default function DataGridCustom({ data ,sendData}:ChildProps) {
     //   ),
     // },
     {
+      field: 'name',
+      headerName: 'Assessor',
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: 'email',
+      headerName: 'Assessor Email',
+      flex: 1,
+      editable: true,
+      renderCell: (params) => (
+        <Typography variant="body2" sx={{ textDecoration: 'underline' }} noWrap>
+          {params.row.email}
+        </Typography>
+      ),
+    },
+    {
       field: 'status',
       type: 'singleSelect',
       headerName: 'Status',
@@ -180,6 +199,7 @@ export default function DataGridCustom({ data ,sendData}:ChildProps) {
       editable:true,
       renderCell: (params) => RenderStatus(params.row.status),
     },
+   
     
     // {
     //   field: 'occupency',
@@ -217,7 +237,7 @@ export default function DataGridCustom({ data ,sendData}:ChildProps) {
       disableColumnMenu: true,
       renderCell: (params) => (
         <>
-          <ActionsMenu   onView={() => {handleView(params.row)}} />
+          <ActionsMenu   onView={(val,edit) => {handleView(params.row,edit)}} />
         </>
   
         
@@ -229,8 +249,8 @@ export default function DataGridCustom({ data ,sendData}:ChildProps) {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setMenu(event.currentTarget);
   };
-  const handleView = (row:any) => {
-    sendData(row.id)
+  const handleView = (row:any,edit:boolean) => {
+    sendData(row.id,edit)
   }
 
   if (columns.length > 0) {
@@ -295,6 +315,8 @@ function RenderStatus(getStatus: string) {
     </Label>
   );
 }
+
+
 
 // ----------------------------------------------------------------------
 

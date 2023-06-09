@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-import { DatePicker, CalendarPicker ,LocalizationProvider} from '@mui/x-date-pickers';
+import { DatePicker, CalendarPicker } from '@mui/x-date-pickers';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 //
@@ -83,38 +83,33 @@ export default function DateRangePicker({
                 sx={{ borderRadius: 2, borderColor: 'divider', borderStyle: 'dashed' }}
               >
 
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <CalendarPicker date={startDate} onChange={onChangeStartDate} />
-                </LocalizationProvider>
               </Paper>
 
               <Paper
                 variant="outlined"
                 sx={{ borderRadius: 2, borderColor: 'divider', borderStyle: 'dashed' }}
               >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <CalendarPicker date={endDate} onChange={onChangeEndDate} />
-                </LocalizationProvider>
               </Paper>
             </>
           ) : (
             
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-
+            <>
               <DatePicker
                 label="Start date"
                 value={startDate}
                 onChange={onChangeStartDate}
                 renderInput={(params) => <TextField {...params} />}
-              />
+                />
 
               <DatePicker
                 label="End date"
                 value={endDate}
                 onChange={onChangeEndDate}
                 renderInput={(params) => <TextField {...params} />}
-              />
-              </LocalizationProvider>
+                />
+            </>
             
           )}
         </Stack>

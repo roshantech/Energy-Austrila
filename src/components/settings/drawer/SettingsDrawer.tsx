@@ -109,7 +109,7 @@ export default function SettingsDrawer() {
             <ModeOptions />
           </Block>
 
-          <Block title="Contrast">
+          {/* <Block title="Contrast">
             <ContrastOptions />
           </Block>
 
@@ -119,11 +119,11 @@ export default function SettingsDrawer() {
 
           <Block title="Layout">
             <LayoutOptions />
-          </Block>
+          </Block> */}
 
-          <Block title="Stretch" tooltip="Only available at large resolutions > 1600px (xl)">
+          {/* <Block title="Stretch" tooltip="Only available at large resolutions > 1600px (xl)">
             <StretchOptions />
-          </Block>
+          </Block> */}
 
           <Block title="Presets">
             <ColorPresetsOptions />

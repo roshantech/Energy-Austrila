@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, Accordion ,AccordionDetails ,AccordionSummary ,Container, Dialog, DialogTitle,Avatar, FormControlLabel, FormLabel, Grid, InputLabel, LinearProgress, Link, ListItem, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent,  Switch, TextField, alpha, useTheme, Stack, Typography } from "@mui/material";
+import { Button, Card, CardContent, CardHeader, Accordion ,AccordionDetails ,AccordionSummary ,Container, Dialog, DialogTitle,Avatar, FormControlLabel, FormLabel, Grid, InputLabel, LinearProgress, Link, ListItem, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent,  Switch, TextField, alpha, useTheme, Stack, Typography, IconButton } from "@mui/material";
 import { Box, styled, width } from "@mui/system";
 import TextareaAutosize from '@mui/base/TextareaAutosize';
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -6,8 +6,10 @@ import { SetStateAction, useCallback, useState } from "react";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Iconify from "src/components/iconify";
 import Label from "src/components/label/Label";
+
 import Editor from "src/components/editor";
 import _mock from "src/_mock/_mock";
+import { m, AnimatePresence } from 'framer-motion';
 import * as Yup from 'yup';
 // form
 import { useForm } from 'react-hook-form';
@@ -16,6 +18,8 @@ import Upload from "src/components/upload/Upload";
 import { TreeItem, TreeItemProps, TreeView,LoadingButton } from "@mui/lab";
 import FormProvider,{RHFTextField} from "src/components/hook-form";
 import { fDate } from "src/utils/formatTime";
+import FileThumbnail from "src/components/file-thumbnail";
+import { varFade } from "src/components/animate";
 
 interface ViewException {
     handleClose: () => void;
@@ -102,7 +106,7 @@ type Props =  {
     occupency: number;
     rating: number;
     status: string;
-    isAdmin: boolean;
+    jobType: string;
     lastName: string;
     firstName: string;
     createdDate: Date;
@@ -110,9 +114,10 @@ type Props =  {
   interface ViewJobDialogProp {
     handleClose: () => void;
       data : Props,
+      edit:boolean;
   }
   
-export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
+export default function ViewJobs({handleClose,data,edit }:ViewJobDialogProp) {
     const theme = useTheme();
     const [dwelling, setDwelling] = useState('');
     const [quillSimple, setQuillSimple] = useState(``);
@@ -226,14 +231,14 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                 <Grid container direction='row' spacing={1}  lg={12} sx={{margin:1}}>
                                 <Grid item  lg={6}   >
                                         
-                                        <TextField name="fullName" label="Job Requestor" sx={{width:'100%'}} value={data.firstName } />
+                                        <TextField name="fullName" label="Job Requestor" sx={{width:'100%'}} value={data.firstName } disabled={edit} />
                                         <Box style={{width:'100%',marginTop:24}}>
                                             <FormLabel id="job-type">Job Type</FormLabel>
-                                            <RadioGroup  aria-label='Job Type' sx={{marginLeft:0.3}} name="email" aria-labelledby="Job Type" value="option 1"
+                                            <RadioGroup  aria-label='Job Type'  sx={{marginLeft:0.3}} name="email" aria-labelledby="Job Type" value="option 1"
                                                 defaultValue="top" row >
                                             {options.map((option) => (
                                                 <FormControlLabel
-                                                
+                                                    disabled={edit}
                                                     key={option.value}
                                                     value={option.value}
                                                     control={<Radio  />}
@@ -243,11 +248,12 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                             </RadioGroup>
                                         </Box>
                                         <Box  sx={{width:'100%',marginTop:3}}>
-                                        <FormLabel >Reprocess Details: <Link href="#"><Iconify icon="carbon:view-filled" />View Job</Link></FormLabel>
+                                        <FormLabel >Reprocess Details: <Link href="#" ><Iconify icon="carbon:view-filled" />View Job</Link></FormLabel>
                                         </Box>
                                         <Box  sx={{width:'100%',marginTop:3}}>
                                             <FormLabel id="Dwelling">Dwelling</FormLabel>
                                             <Select
+                                                 disabled={edit}
                                                 sx={{width:'100%'}}
                                                 label="Dwelling"
                                                 value={dwelling}
@@ -263,29 +269,21 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
 
                                             </Select>
                                         </Box>
-                                        <TextField name="fullName"  label="Climate Zone" sx={{width:'100%',marginTop:3}} value={data.firstName } />
-                                        <TextField name="fullName" label="Requestor Email" sx={{width:'100%',marginTop:3}} value={data.email } />
+                                        <TextField name="fullName" disabled={edit} label="Climate Zone" sx={{width:'100%',marginTop:3}} value={data.firstName } />
+                                        <TextField name="fullName" disabled={edit} label="Requestor Email" sx={{width:'100%',marginTop:3}} value={data.email } />
                                         <Box  sx={{width:'100%',marginTop:2}}>
                                         <FormLabel >Job Status: {data.status}</FormLabel>
                                         <LinearProgress variant="determinate" sx={{width:'100%',marginTop:3}} value={data.occupency} />
                                         </Box>
-                                         {/* <Upload
-                                            sx={{width:'100%',marginTop:3}}
-                                            multiple
-                                            thumbnail={preview}
-                                            files={files}
-                                            onDrop={handleDropMultiFile}
-                                            onRemove={handleRemoveFile}
-                                            onRemoveAll={handleRemoveAllFiles}
-                                            onUpload={() => console.log('ON UPLOAD')}
-                                        /> */}
+                                         
                                     
                                 </Grid>
                                 <Grid item lg={6}>
-                                        <TextField name="fullName" label="Job Assessor" sx={{width:'100%'}} value={data.name}/>
-                                        <TextField name="email" label="Priority" value='high' sx={{width:'100%',marginTop:3}}/>
+                                        <TextField disabled={edit} name="fullName" label="Job Assessor" sx={{width:'100%'}} value={data.name}/>
+                                        <TextField disabled={edit} name="email" label="Priority" value='high' sx={{width:'100%',marginTop:3}}/>
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                             <DateTimePicker
+                                            disabled={edit}
                                             renderInput={(props) => <TextField {...props}   sx={{width:'100%',marginTop:3}}/>}
                                             label="Created Date"
                                             value={data.createdDate}
@@ -294,6 +292,7 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                         </LocalizationProvider>
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                             <DateTimePicker
+                                            disabled={edit}
                                             renderInput={(props) => <TextField {...props}   sx={{width:'100%',marginTop:3}}/>}
                                             label="Assigned Date"
                                             value={data.createdDate}
@@ -302,6 +301,7 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                         </LocalizationProvider>
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                             <DateTimePicker
+                                            disabled={edit}
                                             renderInput={(props) => <TextField {...props}   sx={{width:'100%',marginTop:3}}/>}
                                             label="Completed Date"
                                             value={data.createdDate}
@@ -310,6 +310,7 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                         </LocalizationProvider>
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                             <DateTimePicker
+                                            disabled={edit}
                                             renderInput={(props) => <TextField {...props}   sx={{width:'100%',marginTop:3}}/>}
                                             label="Assessor Process Date"
                                             value={data.createdDate}
@@ -318,6 +319,7 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                         </LocalizationProvider>
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                             <DateTimePicker
+                                            disabled={edit}
                                             renderInput={(props) => <TextField {...props}   sx={{width:'100%',marginTop:3}}/>}
                                             label="Cancelled Date"
                                             value={data.createdDate}
@@ -340,8 +342,18 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                         
                                 </Grid>
                                 </Grid>
-                                <Grid container direction='row' lg={6} sx={{margin:3}}>
-                                {/* <Accordion expanded={expanded === 'panel1'} onChange={handleAccordianChange('panel1')}>
+                                <Grid item lg={12} >
+                                    {!edit &&(<Upload
+                                            sx={{width:'100%',marginTop:3}}
+                                            multiple
+                                            thumbnail={preview}
+                                            files={files}
+                                            onDrop={handleDropMultiFile}
+                                            onRemove={handleRemoveFile}
+                                            onRemoveAll={handleRemoveAllFiles}
+                                            onUpload={() => console.log('ON UPLOAD')}
+                                        />)}
+                                <Accordion expanded={expanded === 'panel1'} onChange={handleAccordianChange('panel1')} sx={{marginTop:3}}>
                                             <AccordionSummary
                                             expandIcon={<Iconify icon="" />}
                                             aria-controls="panel1bh-content"
@@ -350,41 +362,101 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                             <Typography sx={{ width: '33%', flexShrink: 0 }}>
                                                 Public Documents
                                             </Typography>
-                                            {expanded !== 'panel1' &&<Typography sx={{ color: 'text.secondary' }}>I am an accordion</Typography>}
+                                            {expanded !== 'panel1' &&(<>   
+                                                            <Typography sx={{ color: 'text.secondary' }}>Public Document</Typography>
+                                                        {publicDocuments.map((list) => (
+                                                                
+                                                                    <FileThumbnail file={list.fileType} />
+                                                                    
+                                                               
+                                                            ))
+                                                        }</>)}
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                            <Typography>
-                                                Nulla facilisi. Phasellus sollicitudin nulla et quam mattis feugiat.
-                                                Aliquam eget maximus est, id dignissim quam.
-                                            </Typography>
+                                                    {
+                                                        publicDocuments.map((list,key) => (
+                                                            <>
+                                                                {/* <FileThumbnail file={list.fileType} />
+                                                                <Typography >
+                                                                    {list.fileName}
+                                                                </Typography> */}
+                                                                <Stack
+                                                                    key={key}
+                                                                    component={m.div}
+                                                                    {...varFade().inUp}
+                                                                    spacing={2}
+                                                                    direction="row"
+                                                                    alignItems="center"
+                                                                    sx={{
+                                                                    my: 1,
+                                                                    px: 1,
+                                                                    py: 0.75,
+                                                                    borderRadius: 0.75,
+                                                                    border: (t) => `solid 1px ${t.palette.divider}`,
+                                                                    }}
+                                                                >
+                                                                    <FileThumbnail file={list.fileType} />
+
+                                                                    <Stack flexGrow={1} sx={{ minWidth: 0 }}>
+                                                                    <Typography variant="subtitle2" noWrap>
+                                                                        {list.fileName}
+                                                                    </Typography>
+
+                                                                    {/* <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                                                                        { fData(size)}
+                                                                    </Typography> */}
+                                                                    </Stack>
+
+                                                                    {!edit && (
+                                                                    <IconButton edge="end" size="small" >
+                                                                        <Iconify icon="eva:close-fill" />
+                                                                    </IconButton>
+                                                                    )}
+                                                                </Stack>
+                                                            </>
+                                                        ))
+                                                    }
+                                               
+
                                             </AccordionDetails>
                                         </Accordion>
-                                        <Accordion expanded={expanded === 'panel2'} onChange={handleAccordianChange('panel2')}>
+                                        <Accordion expanded={expanded === 'panel2'} onChange={handleAccordianChange('panel2')}  sx={{marginBottom:3}}>
                                             <AccordionSummary
                                             expandIcon={<Iconify icon="" />}
                                             aria-controls="panel2bh-content"
                                             id="panel2bh-header"
                                             >
                                             <Typography sx={{ width: '33%', flexShrink: 0 }}>Confidential Documents</Typography>
-                                            <Typography sx={{ color: 'text.secondary' }}>
+                                            {edit &&(<Typography sx={{ color: 'text.secondary' }}>
                                                 You are currently not an owner
-                                            </Typography>
+                                            </Typography>)}
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                            <Typography>
-                                                Donec placerat, lectus sed mattis semper, neque lectus feugiat lectus,
-                                                varius pulvinar diam eros in elit. Pellentesque convallis laoreet
-                                                laoreet.
-                                            </Typography>
+                                                <Grid container direction="row" >
+                                                        {
+                                                            confidentialDocuments.map((list) => (
+                                                                <>
+                                                                    <FileThumbnail file={list.fileType} />
+                                                                    <Typography >
+                                                                        {list.fileName}
+                                                                    </Typography>
+                                                                </>
+                                                            ))
+                                                        }
+                                                </Grid>
+                                               
                                             </AccordionDetails>
-                                        </Accordion> */}
+                                        </Accordion>
                                 </Grid>
-                                <Grid container spacing={3}>
-                                    <FormLabel id="Notes">Comments</FormLabel>
+
+                                <Grid item  lg={12}>
+                                <Typography id="Notes"  sx={{fontSize:'20px' ,marginTop:1}}>Comments</Typography>
+                                {!edit && (
                         
                                              <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
                                                 <Stack spacing={3} alignItems="flex-end">
                                                     <RHFTextField
+                                                    
                                                     name="comment"
                                                     placeholder="Write some of your comments..."
                                                     multiline
@@ -395,7 +467,7 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                                     Post comment
                                                     </LoadingButton>
                                                 </Stack>
-                                            </FormProvider>
+                                            </FormProvider>)}
                                             <Box>
                                             <ListItem
                                                 disableGutters
@@ -424,15 +496,15 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
                                             </Box>
                                 </Grid>
                                 <Grid container spacing={3}>
-                                    <Button variant='soft' onClick={handleClose} sx={{margin:3}}>
-                                        Save
-                                    </Button>
                                     
-                                    <Button variant='soft' color='secondary' onClick={handleClose} sx={{margin:3,marginLeft:70}}>
+                                    <Button variant='soft' color='secondary' onClick={handleClose} sx={{margin:3}}>
                                         Archive Job
                                     </Button>
                                     <Button variant='soft' color='error' onClick={handleException} sx={{margin:3}}>
                                         Exception
+                                    </Button>
+                                    <Button variant='soft' onClick={handleClose} sx={{margin:3,marginLeft:70}}>
+                                        Save
                                     </Button>
                                     <Button variant='soft' color='secondary' onClick={handleClose} sx={{margin:3}}>
                                         Back
@@ -441,3 +513,16 @@ export default function ViewJobs({handleClose,data}:ViewJobDialogProp) {
     </Container>
  )
 }
+
+const publicDocuments = [
+    { fileName: 'public_report', fileType: 'pdf' },
+    { fileName: 'public_presentation', fileType: 'pptx' },
+    { fileName: 'public_budget', fileType: 'xlsx' },
+    { fileName: 'public_policy', fileType: 'docx' },
+  ];
+const confidentialDocuments = [
+    { fileName: 'confidential_contract', fileType: 'pdf' },
+    { fileName: 'confidential_strategy', fileType: 'docx' },
+    { fileName: 'confidential_financials', fileType: 'xlsx' },
+    { fileName: 'confidential_prototype', fileType: 'zip' },
+  ];

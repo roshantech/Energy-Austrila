@@ -76,7 +76,7 @@ export default function Jobs() {
       }
     const [rowid, setrowid] = useState('');
 
-    const handleView = (value : string) => {
+    const handleView = (value : string,edit: boolean) => {
         // setrowid(value)
         // console.log(rowid)
         setscreen((
@@ -99,7 +99,7 @@ export default function Jobs() {
                         Job no:{value}
                         </Typography>
                     </Breadcrumbs>
-                    <ViewJobs handleClose={handleClose} data={_dataGrid.filter((row)=> row.id === value)[0]}/>
+                    <ViewJobs handleClose={handleClose} data={_dataGrid.filter((row)=> row.id === value)[0]} edit={edit}/>
                 </Box>
             </>
         ))
@@ -154,7 +154,7 @@ export default function Jobs() {
         isSelected: isSelectedValuePicker,
         isError,
         shortLabel,
-      } = useDateRangePicker(null, null);
+      } = useDateRangePicker(new Date(), new Date());
 
       const handleChangeStartDate = (newValue: Date | null) => {
         onChangeStartDate(newValue);
@@ -261,10 +261,10 @@ export default function Jobs() {
                         </Scrollbar>
                         </StyledListContainer>
                     </Grid>
-                    <Grid direction='column' item xs={12} sm={12} md={9.5} sx={{display: 'flex',marginTop:2, justifyContent: 'center',height:'680px',width:'100%', alignItems: 'start'}}>
+                    <Grid direction='column' item xs={12} sm={12} md={9.5} sx={{display: 'flex',marginTop:2, justifyContent: 'center',height:'680px',width:'680px', alignItems: 'start'}}>
                         <Grid   item xs={2} sm={2} md={1} spacing={3} sx={{marginTop:'auto'}}>
-                        <Grid container direction="row"  >
-                            <TextField  variant='outlined' size="small" sx={{width:'20%' ,marginTop:1 ,height:'50px'}} placeholder="Search Job"  type="search"  InputProps={{
+                        {/* <Grid container direction="row"  > */}
+                            <TextField  variant='outlined' size="small" sx={{width:'400px' ,marginTop:1 ,height:'50px'}} placeholder="Search Job"  type="search"  InputProps={{
                                 startAdornment: <InputAdornment position="start"><Iconify icon="bi:search" width={24}  /></InputAdornment>,
                                 }}/>
                                 <Button variant='soft' size='medium' sx={{marginLeft:1,marginTop:1,height:'40px'}}>search</Button>
@@ -273,10 +273,9 @@ export default function Jobs() {
                                 <FileFilterButton
                                     isSelected={!!isSelectedValuePicker}
                                     startIcon={<Iconify icon="eva:calendar-fill" />}
-                                    onClick={onOpenPicker}
-                                    >
+                                    onClick={onOpenPicker}>
                                     {isSelectedValuePicker ? shortLabel : 'Select Date'}
-                                    </FileFilterButton>
+                                </FileFilterButton>
                                     <LocalizationProvider  dateAdapter={AdapterDayjs}>
                             {/* <IconButton   size="large"   onClick={pickerCalendar.onOpen}>
                                 <Iconify icon="bi:calendar-range-fill" width={30}/>
@@ -311,10 +310,10 @@ export default function Jobs() {
                                 isError={isError}
                             />
                             </LocalizationProvider>
-                            </Grid>
+                            {/* </Grid> */}
                         </Grid >
                         <Grid   container direction="row" sx={{height:'600px'}} >
-                            <DataGridCustom data={filteredData} sendData={handleView}/>
+                            <DataGridCustom data={filteredData} sendData={(value,edit) => {handleView(value,edit)}}/>
                         </Grid>
                     </Grid>
         </>
@@ -333,12 +332,15 @@ export default function Jobs() {
 
             </Dialog> */}
             <Grid container spacing={3} >
-            <Grid container direction='row' spacing={1} sx={{margin:1,marginTop:3,marginLeft:7}}>
+            <Grid sx={{marginLeft:10,marginTop:1}}>
+                    <Typography variant='h4'> Today</Typography>
+             </Grid>
+            <Grid container direction='row' spacing={1} sx={{margin:1,marginLeft:10}}>
                   <Grid item xs={12} sm={6} md={2.9} >
                   <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
                     <Box sx={{ flexGrow: 1 }}>
                       <Typography variant="subtitle2">In Progress</Typography>
-                      <Typography variant="h3">{fNumber(714000)}</Typography>
+                      <Typography variant="h3">{fNumber(20)} / <span style={{fontSize:'20px',color:'#ff5630'}}>4</span></Typography>
                     </Box>
                     <Iconify icon="carbon:in-progress" width={24}/>
 
@@ -348,7 +350,7 @@ export default function Jobs() {
                   <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
                     <Box sx={{ flexGrow: 1 }}>
                       <Typography variant="subtitle2">Assigned</Typography>
-                      <Typography variant="h3">{fNumber(114000)}</Typography>
+                      <Typography variant="h3">{fNumber(4)} / <span style={{fontSize:'20px',color:'#ff5630'}}>0</span></Typography>
                     </Box>
                     <Iconify icon="ic:baseline-assessment" width={24}/>
 
@@ -357,7 +359,7 @@ export default function Jobs() {
                   <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
                     <Box sx={{ flexGrow: 1 }}>
                       <Typography variant="subtitle2">Completed</Typography>
-                      <Typography variant="h3">{fNumber(4000)}</Typography>
+                      <Typography variant="h3">{fNumber(132)} / <span style={{fontSize:'20px',color:'#ff5630'}}>13</span></Typography>
                     </Box>
                     <Iconify icon="carbon:task-complete" width={24}/>
 
@@ -366,12 +368,13 @@ export default function Jobs() {
                     <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
                       <Box sx={{ flexGrow: 1 }}>
                         <Typography variant="subtitle2">On Hold</Typography>
-                        <Typography variant="h3">{fNumber(200)}</Typography>
+                        <Typography variant="h3">{fNumber(2)} / <span style={{fontSize:'20px',color:'#ff5630'}}>0</span></Typography>
                       </Box>
                         <Iconify icon="pajamas:status-paused" width={24}/>
                     </Card>                  
                   </Grid>
                 </Grid>
+                
                 {/* <Grid container direction="column" item xs={12} sm={12} md={2.5} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Stack direction="row" spacing={1} sx={{width:'250px'}}>
                         <Card style={{display: 'flex',
@@ -628,7 +631,7 @@ const _dataGrid = [...Array(40)].map((_, index) => ({
     occupency: _mock.number.percent(index),
     rating: _mock.number.rating(index),
     status: randomInArray(['Assigned', 'In Progress',"Job Complete","Assessment Complete", 'On Hold','Urgent Jobs','Exception','New','Cancelled']),
-    isAdmin: _mock.boolean(index),
+    jobType: randomInArray(['New','Existing']),
     firstName: `${_mock.name.lastName(index) }  ${ _mock.name.firstName(index)}`,
     lastName: _mock.name.firstName(index),
     createdDate: _mock.time(index),
