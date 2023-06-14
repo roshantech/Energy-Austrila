@@ -4,6 +4,8 @@ import { AppBar, Box, Stack, Toolbar, useTheme } from '@mui/material';
 import NavSectionHorizontal from 'src/components/nav-section/horizontal';
 import Iconify from 'src/components/iconify';
 import { HEADER } from 'src/config-global';
+import { useEffect } from 'react';
+import NotificationsPopover from './NotificationsPopover';
 
 
 
@@ -15,6 +17,9 @@ export default function MainLayout() {
   const isHome = false;
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === 'dark';
+
+ 
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: 1 }}>
       <Stack spacing={2} sx={{ mb: 0 }}>
@@ -33,8 +38,11 @@ export default function MainLayout() {
           >
               <Toolbar>
                 <img src={!isDarkMode ? './logo.png' : './logodark.png'} alt="Logo"  style={{ width: '50px', height: '50px' }}/>
-              <NavSectionHorizontal data={NAV_ITEMS} />             
-               <NavSectionHorizontal data={NavRightItems} sx={{margin:0}}/>
+              <NavSectionHorizontal data={NAV_ITEMS} />  
+              
+                <NotificationsPopover />
+                <NavSectionHorizontal data={NavRightItems} sx={{margin:0}}/>
+                       
 
             </Toolbar>
           </AppBar>

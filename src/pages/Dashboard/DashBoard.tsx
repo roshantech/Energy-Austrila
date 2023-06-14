@@ -153,7 +153,6 @@ export default function DashBoard() {
           },
           style:{
             fontSize: '13px', 
-            
           },
         },
  
@@ -172,242 +171,153 @@ export default function DashBoard() {
       
     return (
       
-        <Box  sx={{width:'100% ',marginTop:2,marginRight:2}}>
-           
-            <Grid container spacing={1} sx={{marginLeft:'auto',marginRight:'auto',width:'90%'}}>
-            
-            <Grid item xs={12} sm={12} md={9.7}  sx={{height:'300px'}}>
-             
-            <Grid container flexDirection='row' justifyContent='end' sx={{marginRight:2,marginTop:3,marginLeft:'-38px'}}>
-                <ToggleButtonGroup size="medium" value={selectedValue.timeFrame} onChange={(event,val) => {handleChange(event,val)}} color="success">
-                  <ToggleButton  value='Today'>Today</ToggleButton>
-                  <ToggleButton value='Yesterday'>Yesterday</ToggleButton>
-                  <ToggleButton value='Week'>Week</ToggleButton>
-                  <ToggleButton value='Month'>Month</ToggleButton>
-                  <ToggleButton value='All'>All</ToggleButton>
-                </ToggleButtonGroup>
-                </Grid>
-                <Grid container direction='row' spacing={1} sx={{margin:1,marginTop:1}}>
-                  <Grid item xs={12} sm={6} md={2.9} >
-                  <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="subtitle2">In Progress</Typography>
-                      <Typography variant="h3">{fNumber(20)} / <span style={{fontSize:'20px',color:'#ff5630'}}>4</span></Typography>
-                    </Box>
-                    <Iconify icon="carbon:in-progress" width={24}/>
-
-                  </Card>                
+        <Grid container spacing={2} sx={{width:'90%',marginLeft:'auto',marginRight:'auto'}}>
+           <Grid item xs={12} sm={12} md={10}>
+            <Grid container direction='column'  spacing={1} >
+              
+              <Grid item xs={12} sm={12} md={12}  >
+              
+              <Grid container flexDirection='row' justifyContent='end' sx={{marginTop:3}}>
+                  <ToggleButtonGroup size="medium" value={selectedValue.timeFrame} onChange={(event,val) => {handleChange(event,val)}} color="success">
+                    <ToggleButton  value='Today'>Today</ToggleButton>
+                    <ToggleButton value='Yesterday'>Yesterday</ToggleButton>
+                    <ToggleButton value='Week'>Week</ToggleButton>
+                    <ToggleButton value='Month'>Month</ToggleButton>
+                    <ToggleButton value='All'>All</ToggleButton>
+                  </ToggleButtonGroup>
                   </Grid>
-                  <Grid item xs={12} sm={6} md={2.9} >
-                  <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="subtitle2">Assigned</Typography>
-                      <Typography variant="h3">{fNumber(4)} / <span style={{fontSize:'20px',color:'#ff5630'}}>0</span></Typography>
-                    </Box>
-                    <Iconify icon="ic:baseline-assessment" width={24}/>
-
-                  </Card>                  </Grid>
-                  <Grid item xs={12} sm={6} md={2.9} >
-                  <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Typography variant="subtitle2">Completed</Typography>
-                      <Typography variant="h3">{fNumber(132)} / <span style={{fontSize:'20px',color:'#ff5630'}}>13</span></Typography>
-                    </Box>
-                    <Iconify icon="carbon:task-complete" width={24}/>
-
-                  </Card>                  </Grid>
-                  <Grid item xs={12} sm={6} md={2.9} >
+                  <Grid container direction='row' spacing={1} sx={{marginTop:1}}>
+                    <Grid item xs={12} sm={6} md={3} >
                     <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
                       <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="subtitle2">On Hold</Typography>
-                        <Typography variant="h3">{fNumber(2)} / <span style={{fontSize:'20px',color:'#ff5630'}}>0</span></Typography>
+                        <Typography variant="subtitle2">In Progress</Typography>
+                        <Typography variant="h3">{fNumber(20)} / <span style={{fontSize:'20px',color:'#ff5630'}}>4</span></Typography>
                       </Box>
-                        <Iconify icon="pajamas:status-paused" width={24}/>
-                    </Card>                  
+                      <Iconify icon="carbon:in-progress" width={24}/>
+
+                    </Card>                
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={3} >
+                    <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
+                      <Box sx={{ flexGrow: 1 }}>
+                        <Typography variant="subtitle2">Assigned</Typography>
+                        <Typography variant="h3">{fNumber(4)} / <span style={{fontSize:'20px',color:'#ff5630'}}>0</span></Typography>
+                      </Box>
+                      <Iconify icon="ic:baseline-assessment" width={24}/>
+
+                    </Card>                  </Grid>
+                    <Grid item xs={12} sm={6} md={3} >
+                    <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
+                      <Box sx={{ flexGrow: 1 }}>
+                        <Typography variant="subtitle2">Completed</Typography>
+                        <Typography variant="h3">{fNumber(132)} / <span style={{fontSize:'20px',color:'#ff5630'}}>13</span></Typography>
+                      </Box>
+                      <Iconify icon="carbon:task-complete" width={24}/>
+
+                    </Card>                  </Grid>
+                    <Grid item xs={12} sm={6} md={3} >
+                      <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }} >
+                        <Box sx={{ flexGrow: 1 }}>
+                          <Typography variant="subtitle2">On Hold</Typography>
+                          <Typography variant="h3">{fNumber(2)} / <span style={{fontSize:'20px',color:'#ff5630'}}>0</span></Typography>
+                        </Box>
+                          <Iconify icon="pajamas:status-paused" width={24}/>
+                      </Card>                  
+                    </Grid>
+                  </Grid>
+              
+                
+              </Grid>
+              <Grid item xs={12} sm={12} md={10}>
+                <Grid  container  spacing={1} >
+                  <Grid item xs={12} sm={12} md={3} >
+                    <Card sx={{maxWidth:352 ,width:'auto',borderRadius:2}} >
+                      <CardHeader title="Progress Chart" />
+                      <StyledChartWrapper dir="ltr">
+                        <Chart type="pie" series={series} options={chartOptions}   height={492} />
+                      </StyledChartWrapper>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={9} >
+                    <Card sx={{width:'auto',height:'510px'}}>
+                      <CardHeader title="Requestor List" subheader="" />
+
+                      <Scrollbar>
+                        <Stack spacing={3} sx={{ p: 3 }}>
+                          {list.map((country) => (
+                            <CountryItem key={country.id} country={country} />
+                          ))}
+                        </Stack>
+                      </Scrollbar>
+                    </Card>
                   </Grid>
                 </Grid>
+                
+              </Grid>
+              <Grid item xs={12} sm={12} md={10}>
+                <Grid  container  spacing={1} >
+                  <Grid item xs={12} sm={12} md={12}>
+                    <Card  >
+                      <CardHeader
+                        title="Job Aging Chart"
+                        subheader=""
+                      
+                      />
+
+                        <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
+                        
+                            <Chart type="bar" series={data} options={chartOptionBar} height={364} />
+                          
+                        </Box>
+                      
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Grid>
+
              
-              {/* <Grid container direction='row' spacing={1} sx={{margin:1,marginTop:1}}>
-                <Grid item xs={12} sm={6} md={2.9} >
-                  <AppWidgetSummary title="In Progress" total={714000} icon='carbon:in-progress' color='primary' sx={{height:'100px'}} />
-                </Grid>
-                <Grid item xs={12} sm={6} md={2.9} >
-                  <AppWidgetSummary title="Assigned" total={714000} icon='ic:baseline-assessment' color='secondary' sx={{}} />
-                </Grid>
-                <Grid item xs={12} sm={6} md={2.9} >
-                  <AppWidgetSummary title="Completed" total={714000} icon='carbon:task-complete' color='warning' sx={{}} />
-                </Grid>
-                <Grid item xs={12} sm={6} md={2.9} >
-                  <AppWidgetSummary title="On Hold" total={714000} icon='pajamas:status-paused' color='error' sx={{}} />
-                </Grid>
-              </Grid> */}
-            </Grid>
-            <Grid item xs={12} sm={12} md={2.3} sx={{}}>
-              <Card sx={{ display: 'flex', alignItems: 'center', p: 3 ,height:'400px'}} >
-                <Stack spacing={2} sx={{width:"fit-content" ,display: 'flex', justifyContent: 'center', alignItems: 'center',marginLeft:'auto',marginRight:'auto'}}>
-                  <Avatar alt="Remy Sharp" src={_mock.image.random(7)}  sx={{boxShadow: "z23", width: 150, height: 150,borderRadius:1 }} variant="square" />
-                  <TextMaxLine line={1}>
-                    <Label sx={{marginTop:0.1 ,width:'230px',fontSize:14}} >Roshan Bhagat</Label>
-                  </TextMaxLine>
-                  
-                  <Label color="secondary" variant="outlined" sx={{width:'230px',fontSize:14}}>Role : Management</Label>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DateTimePicker
-                        renderInput={(props) => <TextField {...props}   sx={{width:'230px'}}/>}
-                        label="Last Login Date"
-                        disabled
-                        value={Date.now()}
-                        onChange={setValue}
-                      /> 
-                    </LocalizationProvider>
-                  <Button variant="outlined" sx={{width:'230px',fontSize:14}}> View Profile</Button>
-                </Stack>
-              </Card>
-            </Grid>
-            
-        </Grid>
-        {/* <Divider variant="middle" sx={{marginTop:'10px'}}/> */}
-        
-        <Grid container spacing={1} sx={{marginLeft:'auto',marginRight:'auto',width:'90%',marginBottom:'10px'}}>
-        <Grid  container direction="column" item xs={12} sm={12} md={3} sx={{position:'absolute',top:'300px',marginLeft:2}} >
-              <Grid item xs={12} sm={12} md={3} >
-                <Card sx={{maxWidth:352 ,width:'auto',borderRadius:2}} >
-                  <CardHeader title="Progress Chart" />
-                  <StyledChartWrapper dir="ltr">
-                    <Chart type="pie" series={series} options={chartOptions}   height={492} />
-                  </StyledChartWrapper>
+          </Grid>
+          </Grid>
+          <Grid item xs={12} sm={12} md={2} marginTop={2.5}>
+            <Grid container direction='column'  spacing={1} >
+              <Grid item >
+                              <Card sx={{ display: 'flex', alignItems: 'center', p: 3 ,height:'400px'}} >
+                                <Stack spacing={2} sx={{width:"fit-content" ,display: 'flex', justifyContent: 'center', alignItems: 'center',marginLeft:'auto',marginRight:'auto'}}>
+                                  <Avatar alt="Remy Sharp" src={_mock.image.random(7)}  sx={{boxShadow: "z23", width: 150, height: 150,borderRadius:1 }} variant="square" />
+                                  <TextMaxLine line={1}>
+                                    <Label sx={{marginTop:0.1 ,width:'230px',fontSize:14}} >Roshan Bhagat</Label>
+                                  </TextMaxLine>
+                                  
+                                  <Label color="secondary" variant="outlined" sx={{width:'230px',fontSize:14}}>Role : Management</Label>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                      <DateTimePicker
+                                        renderInput={(props) => <TextField {...props}   sx={{width:'230px'}}/>}
+                                        label="Last Login Date"
+                                        disabled
+                                        value={Date.now()}
+                                        onChange={setValue}
+                                      /> 
+                                    </LocalizationProvider>
+                                  <Button variant="outlined" sx={{width:'230px',fontSize:14}}> View Profile</Button>
+                                </Stack>
+                              </Card>
+              </Grid>
+              <Grid item  sx={{height:'850px'}}>
+                <Card sx={{width:'100%'}}>
+                  <CardHeader title="Assessor List" subheader="" />
+                          
+                  <Stack spacing={3} sx={{ p: 3 ,height:'760px'}} >
+                    <Scrollbar>
+                      {orderBy(_appAuthors, ['favourite'], ['desc']).map((author, index) => (
+                        <AuthorItem key={author.id} author={author} index={index} />
+                        ))}
+                    </Scrollbar>
+                  </Stack>
                 </Card>
               </Grid>
             </Grid>
-            <Grid container direction="row" item xs={12} sm={12} md={6.2}  sx={{height:'350px',position:'absolute',marginLeft:47,top:'300px'}}>
-              <Card sx={{width:'100%',height:'510px'}}>
-                <CardHeader title="Requestor List" subheader="" />
-
-                <Scrollbar>
-                  <Stack spacing={3} sx={{ p: 3 }}>
-                    {list.map((country) => (
-                      <CountryItem key={country.id} country={country} />
-                    ))}
-                  </Stack>
-                </Scrollbar>
-              </Card>
-            </Grid>
-            <Grid container direction="row" item xs={12} sm={12} md={2.1} sx={{height:'800px',position:'absolute',marginLeft:174.6,marginTop:2}}>
-            <Card sx={{width:'100%'}}>
-              <CardHeader title="Assessor List" subheader="" />
-                      
-              <Stack spacing={3} sx={{ p: 3 ,height:'730px'}} >
-                <Scrollbar>
-                  {orderBy(_appAuthors, ['favourite'], ['desc']).map((author, index) => (
-                    <AuthorItem key={author.id} author={author} index={index} />
-                    ))}
-                </Scrollbar>
-              </Stack>
-            </Card>
-            </Grid>
-
-          {/* <Grid container direction="row" item xs={12} sm={12} md={9} >
-              <Stack direction="column" spacing={1} sx={{width:'100%'}}>
-                <TextField variant='outlined' size="small" sx={{maxWidth:'400px'}} placeholder="Search Assessor"  type="search"  InputProps={{
-                  startAdornment: <InputAdornment position="start"><Iconify icon="bi:search" width={24}  /></InputAdornment>,
-                }}/>
-                <Grid  container sx={{
-                 
-                  height:'550px',
-                }}>
-                  <Scrollbar>
-                    <Grid  container spacing={3} sx={{
-
-                   marginLeft:'-25px !important',
-                }}>
-                      {assessors.map((assessor, index) => (
-                        <Grid key={index}  item xs={12} sm={12} lg={6} md={6} >
-                            <Card sx={{ display: 'flex' ,flexDirection:'row'  ,justifyContent:'start',borderRadius:0}}>
-                            <CardMedia
-                              component="img"
-                              sx={{ width: 100 }}
-                              image={_mock.image.random(index)}
-                              alt="Live from space album cover"
-                            />
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                              <CardContent sx={{ flex: '1 0 auto' }}>
-                                <Typography  component="div" variant="h6">
-                                    {assessor.name}
-                                </Typography>
-                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                  Open : {assessor.open}
-                                </Typography>
-                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                  Solved : {assessor.solved}
-                                </Typography>
-                              </CardContent>
-                              
-                            </Box>
-                            <Box sx={{marginLeft: 'auto'}}>
-                            
-                              <div
-                                style={{
-                                  width: '100px',
-                                  height: '100px',
-                                  borderRadius: '5%',
-                                  backgroundColor: getGradientColorBySatisfactionRate(assessor.satisfactionRate),
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  flexDirection:'column',
-                                  justifyContent: 'center',
-                                  margin: '16px',
-                                }}
-                              >
-                              
-                                <Typography variant="h4" component="span" style={{ color: '#fff' }}>
-                                  {assessor.satisfactionRate}%
-                                </Typography>
-                                <Typography style={{ color: '#fff' }}>
-                                Occupancy
-                              </Typography>
-                              </div>
-                            </Box>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </Scrollbar>
-                </Grid>
-              </Stack>
-            </Grid> */}
-            
+          </Grid>
         </Grid>
-        <Grid container spacing={1} sx={{marginLeft:'auto',marginRight:'auto',width:'90%',marginBottom:'10px'}}>
-        <Card  sx={{marginTop:45,marginLeft:2.8,width:"1346px"}}>
-          <CardHeader
-            title="Job Aging Chart"
-            subheader=""
-            // action={
-            //   <CustomSmallSelect
-            //     value={seriesData}
-            //     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            //       setSeriesData(event.target.value)
-            //     }
-            //   >
-            //     {seriesBar.map((option:any) => (
-            //       <option key={option.type} value={option.type}>
-            //         {option.type}
-            //       </option>
-            //     ))}
-            //   </CustomSmallSelect>
-            // }
-          />
-
-            <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
-             
-                <Chart type="bar" series={data} options={chartOptionBar} height={364} />
-              
-            </Box>
-          
-        </Card>
-        </Grid>
-       
-        </Box>
     )
 }
 const CustomSmallSelect = styled((props: TextFieldProps) => (

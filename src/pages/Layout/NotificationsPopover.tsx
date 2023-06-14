@@ -1,5 +1,5 @@
 import { noCase } from 'change-case';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import {
   Box,
@@ -17,15 +17,16 @@ import {
   ListItemAvatar,
   ListItemButton,
 } from '@mui/material';
+import _mock from 'src/_mock';
 // utils
-import { fToNow } from '../../../utils/formatTime';
+import { fToNow } from '../../utils/formatTime';
 // _mock_
-import { _notifications } from '../../../_mock/arrays';
+import { _notifications } from '../../_mock/arrays';
 // components
-import Iconify from '../../../components/iconify';
-import Scrollbar from '../../../components/scrollbar';
-import MenuPopover from '../../../components/menu-popover';
-import { IconButtonAnimate } from '../../../components/animate';
+import Iconify from '../../components/iconify';
+import Scrollbar from '../../components/scrollbar';
+import MenuPopover from '../../components/menu-popover';
+import { IconButtonAnimate } from '../../components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +36,45 @@ export default function NotificationsPopover() {
   const [notifications, setNotifications] = useState(_notifications);
 
   const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://127.0.0.1:3000/ws");
+
+    socket.addEventListener("open", () => {
+      console.log("WebSocket connection established");
+    });
+    socket.addEventListener("message", (event) => {
+      console.log("Received message:", JSON.parse(event.data));
+      const data = JSON.parse(event.data)
+      console.log( (notifications.length +1).toString(),
+        event.data.message,
+        _mock.image.avatar(notifications.length +1) ,
+        event.data.type,
+        event.data.createdAt,
+        true)
+      setNotifications([...notifications, {
+        id: (notifications.length +1).toString(),
+        message: data.message,
+        avatar: _mock.image.avatar(notifications.length +1) ,
+        type: data.type,
+        createdAt: data.createdAt,
+        isUnRead: true,
+      }]);
+
+    });
+
+    socket.addEventListener("error", (error) => {
+      console.error("WebSocket error:", error);
+    });
+
+    socket.addEventListener("close", (event) => {
+      console.log("WebSocket connection closed:", event.code, event.reason);
+    });
+
+    return () => {
+      socket.close();
+    };
+  }, );
 
   const handleOpenPopover = (event: React.MouseEvent<HTMLElement>) => {
     setOpenPopover(event.currentTarget);
@@ -60,7 +100,7 @@ export default function NotificationsPopover() {
         onClick={handleOpenPopover}
         sx={{ width: 40, height: 40 }}
       >
-        <Badge badgeContent={totalUnRead} color="error">
+        <Badge badgeContent={totalUnRead}  color="primary">
           <Iconify icon="eva:bell-fill" />
         </Badge>
       </IconButtonAnimate>
@@ -95,7 +135,7 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications.slice(0, 2).map((notification) => (
+            {notifications.map((notification) => notification.isUnRead && (
               <NotificationItem key={notification.id} notification={notification} />
             ))}
           </List>
@@ -108,9 +148,12 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications.slice(2, 5).map((notification) => (
-              <NotificationItem key={notification.id} notification={notification} />
-            ))}
+            <Scrollbar>
+              {notifications.map((notification) => (
+                <NotificationItem key={notification.id} notification={notification} />
+              ))}
+            </Scrollbar>
+
           </List>
         </Scrollbar>
 
@@ -181,9 +224,9 @@ function renderContent(notification: NotificationItemProps) {
     </Typography>
   );
 
-  if (notification.type === 'order_placed') {
+  if (notification.type === 'Job Created') {
     return {
-      avatar: <img alt={notification.type} src="/assets/icons/notification/ic_package.svg" />,
+      avatar: <img alt={notification.type}  src="/assets/icons/notification/jobc.png" />,
       title,
     };
   }
